@@ -1,18 +1,18 @@
 <template>
   <HeaderMenu />
-  <div class="container d-flex justify-content-center align-items-center h-100 w-75 mt-5">
-    <form class="border rounded p-4" @submit.prevent="submitForm">
+  <div class="container d-flex justify-content-center align-items-center mt-5">
+    <form class="border rounded p-4 align-items-center" @submit.prevent="submitForm">
       <h2 class="mb-4">Login</h2>
       <div class="form-group">
         <label for="username">Username:</label>
-        <input type="text" class="form-control" id="username" v-model="formData.username" required>
+        <input type="text" class="form-control form-control-sm" id="username" v-model="formData.username" required>
       </div>
-      <div class="form-group">
+      <div class="form-group my-3">
         <label for="password">Password:</label>
-        <input type="password" class="form-control" id="password" v-model="formData.password" required>
+        <input type="password" class="form-control form-control-sm" id="password" v-model="formData.password" required>
       </div>
       <router-link to="/registration">Зареєструватись</router-link>
-      <button type="submit" class="btn btn-dark float-right">Log in</button>
+      <button type="submit" class="btn btn-dark float-end">Login</button>
     </form>
   </div>
 </template>

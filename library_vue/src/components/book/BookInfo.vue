@@ -11,23 +11,31 @@
         <div class="col-md-9">
           <div class="card-body">
             <div class="row">
-              <span class="text-muted col-4">Title:</span>
-              <span class="card-title col-6" v-if="!showUpdate">{{ book.name }}</span>
-              <input type="text" class="form-control col-6" v-model="editedBook.name" v-else>
+              <span class="text-muted col-3">Title:</span>
+              <span class="card-title col-9" v-if="!showUpdate">{{ book.name }}</span>
+              <div v-else class="col-9">
+                <input type="text" class="form-control form-control-sm col-6" v-model="editedBook.name">
+              </div>
             </div>
             <div class="row">
-              <span class="text-muted col-4">Author:</span>
-              <span class="text-muted col-6" v-if="!showUpdate">{{ book.author }}</span>
-              <input type="text" class="form-control col-6" v-model="editedBook.author" v-else>
+              <span class="text-muted col-3">Author:</span>
+              <span class="text-muted col-9" v-if="!showUpdate">{{ book.author }}</span>
+              <div v-else class="col-9">
+                <input type="text" class="form-control form-control-sm " v-model="editedBook.author">
+              </div>
             </div>
             <div class="row">
-              <span class="text-muted col-4">Genre:</span>
-              <p class="card-text col-6" v-if="!showUpdate">{{ book.genre }}</p>
-              <input type="text" class="form-control col-6" v-model="editedBook.genre" v-else>
+              <span class="text-muted col-3">Genre:</span>
+              <p class="card-text col-8" v-if="!showUpdate">{{ book.genre }}</p>
+              <div v-else class="col-9">
+                <input type="text" class="form-control form-control-sm col-6" v-model="editedBook.genre">
+              </div>
             </div>
             <div class="row" v-if="showUpdate">
-              <span class="text-muted col-4">Quantity:</span>
-              <input type="text" class="form-control col-6" v-model="editedBook.quantity">
+              <span class="text-muted col-3">Quantity:</span>
+              <div class="col-9">
+                <input type="text" class="form-control form-control-sm col-6" v-model="editedBook.quantity">
+              </div>
             </div>
             <div class="row col-12 mt-3" v-if="!showUpdate">
               <span v-if="isHaveBook" class="text-muted" style="font-size: 12px">Виберіть тип замовлення</span>
@@ -98,13 +106,13 @@ export default {
         console.error(error);
       }
     },
-    async updateBook(){
+    async updateBook() {
       const response = await sendRequest('/book', 'PUT', this.editedBook, localStorage.getItem('AccessToken'));
-      if (response.ok){
+      if (response.ok) {
         await this.getBook();
         await this.changeStatus();
         console.log('Update Book ok');
-      }else {
+      } else {
         console.log('fail update book');
       }
     }

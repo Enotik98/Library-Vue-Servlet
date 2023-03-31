@@ -2,7 +2,7 @@
   <HeaderMenu/>
   <div class="container mt-5">
     <OrderCard v-if="!isAdmin"/>
-    <div v-if="isAdmin" class="mt-5">
+    <div v-if="isAdmin" class="mt-5 p-4">
       <h2>Список Замовлень</h2>
       <table class="table">
         <thead>
@@ -17,6 +17,8 @@
           <th scope="col"></th>
         </tr>
         </thead>
+        <tbody>
+
         <tr v-for="order in orders" :key="order.id">
           <td>{{ order.id }}</td>
           <td>{{ getUsername(order.user_id, users) }}</td>
@@ -33,6 +35,7 @@
           <td>
           </td>
         </tr>
+        </tbody>
       </table>
       <!--      <div>-->
 
@@ -48,7 +51,7 @@ import OrderCard from "@/components/order/Order.vue";
 
 export default {
   name: "ListOrder",
-  components: { OrderCard, HeaderMenu},
+  components: {OrderCard, HeaderMenu},
   data() {
     return {
       orders: [],

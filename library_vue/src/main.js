@@ -11,7 +11,7 @@ import CreateBook from "@/components/book/CreateBook.vue";
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.js'
-// import 'jquery/dist/jquery.min.js'
+import 'jquery/dist/jquery.min.js'
 
 
 const routes = [

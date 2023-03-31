@@ -1,11 +1,13 @@
 <template>
   <div v-if="isHaveBook">
     <form>
-      <div class="row">
-        <select name="type" id="typeTicket" class="form-control-sm col-md-5 mx-3" v-model="order.type" required>
+      <div class="row ">
+        <div class="col-6">
+        <select name="type" id="typeTicket" class="form-select form-select-sm " v-model="order.type" required>
           <option value="ROOM" selected>Зала</option>
           <option value="SUBSCRIPTION">Абонемент</option>
         </select>
+        </div>
         <button @click="addOrder" class="btn btn-dark btn-sm col-4">Замовити</button>
       </div>
     </form>

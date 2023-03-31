@@ -8,26 +8,26 @@
           <label class="col-6">Ім'я:</label>
           <div v-if="!showUpdateForm" class="col-6">{{ user.username }}</div>
           <div v-else class="col-6">
-            <input type="text" class="form-control" v-model="editedUser.username">
+            <input type="text" class="form-control form-control-sm" v-model="editedUser.username">
           </div>
         </div>
         <div class="row">
           <label class="col-6">Email:</label>
           <div v-if="!showUpdateForm" class="col-6">{{ user.email }}</div>
           <div v-else class="col-6">
-            <input type="email" class="form-control" v-model="editedUser.email">
+            <input type="email" class="form-control form-control-sm" v-model="editedUser.email">
           </div>
         </div>
         <div class="row">
           <label class="col-6">Пароль:</label>
           <div v-if="!showUpdateForm" class="col-6">**********</div>
           <div v-else class="col-6">
-            <input type="password" class="form-control" v-model="editedUser.password">
+            <input type="password" class="form-control form-control-sm" v-model="editedUser.password">
           </div>
         </div>
-        <div class="row justify-content-end mt-3">
-          <button v-if="!showUpdateForm" @click="changeStatus" class="btn btn-dark col-4">Редагувати</button>
-          <button v-else @click="updateUser" class="btn btn-dark col-4">Зберегти зміни</button>
+        <div class="row offset-7 mt-3 me-1">
+          <button v-if="!showUpdateForm" @click="changeStatus" class="btn btn-dark ">Редагувати</button>
+          <button v-else @click="updateUser" class="btn btn-dark">Зберегти зміни</button>
         </div>
       </div>
       <div class="mt-5">

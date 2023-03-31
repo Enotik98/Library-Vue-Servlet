@@ -1,46 +1,49 @@
 <template>
-  <HeaderMenu />
+  <HeaderMenu/>
   <div class="container d-flex justify-content-center align-items-center mt-5">
     <div>
       <h2>Інформація про замовлення</h2>
       <div class="order-card rounded">
         <div class="row">
           <span class="col-6">Номер замовлення:</span>
-          <span class="col-6">{{order.id}}</span>
+          <span class="col-6">{{ order.id }}</span>
         </div>
         <div class="row">
           <span class="col-6">Замовник:</span>
-          <span class="col-6">{{username}}</span>
+          <span class="col-6">{{ username }}</span>
         </div>
         <div class="row">
           <span class="col-6">Книга:</span>
-          <span class="col-6">{{book.name}}</span>
+          <span class="col-6">{{ book.name }}</span>
         </div>
         <div class="row">
           <span class="col-6">Дата замовлення:</span>
-          <span class="col-6">{{formatDate(order.date_order)}}</span>
+          <span class="col-6">{{ formatDate(order.date_order) }}</span>
         </div>
         <div class="row">
           <span class="col-6">Тип квитка:</span>
-          <span class="col-6">{{order.type}}</span>
+          <span class="col-6">{{ order.type }}</span>
         </div>
         <div class="row">
           <span class="col-6">Статус замовлення:</span>
-          <span class="col-6">{{order.status}}</span>
+          <span class="col-6">{{ order.status }}</span>
         </div>
-        <div class="row justify-content-end my-1" v-if="showDropdown">
-          <select v-model="order.status" class="form-control col-6">
-            <option value="WAITING">WAITING</option>
-            <option value="ISSUED">ISSUED</option>
-            <option value="RETURNED">RETURNED</option>
-          </select>
+        <div class="row my-2" v-if="showDropdown">
+          <div class="offset-6 col-6">
+            <select v-model="order.status" class="form-select form-select-sm ">
+              <option value="WAITING">WAITING</option>
+              <option value="ISSUED">ISSUED</option>
+              <option value="RETURNED">RETURNED</option>
+            </select>
+          </div>
         </div>
-        <div class="row justify-content-end col-12 my-1">
-          <button v-if="!showDropdown" @click="changeShow" class="btn btn-sm btn-dark">Редагувати</button>
-          <button v-else @click="updateOrder" class="btn btn-sm btn-dark">Зберігти</button>
+        <div class="row me-1 my-1">
+          <button v-if="!showDropdown" @click="changeShow" class="btn btn-sm btn-dark col-4 offset-8">Редагувати
+          </button>
+          <button v-else @click="updateOrder" class="btn btn-sm btn-dark col-4 offset-8">Зберігти</button>
         </div>
-        <div class="row justify-content-end col-12">
-          <ConfirmationWindow :orderId="order.id" urlPath="/order" />
+        <div class="row">
+          <ConfirmationWindow :orderId="order.id" urlPath="/order"/>
         </div>
       </div>
     </div>
@@ -62,17 +65,15 @@ export default {
       showDropdown: false,
       book: {},
       user: {},
-      username : this.$route.query.username
+      username: this.$route.query.username
     }
   },
-  props:{
-
-  },
+  props: {},
   mounted() {
     this.getOrder()
   },
   methods: {
-    changeShow(){
+    changeShow() {
       this.showDropdown = !this.showDropdown
     },
     formatDate,
@@ -86,21 +87,21 @@ export default {
     },
     async getBook() {
       const response = await sendRequest('/book/' + this.order.book_id, 'GET', null, localStorage.getItem('AccessToken'));
-      if (response.ok){
+      if (response.ok) {
         const data = await response.json()
         this.book = data;
-      }else {
+      } else {
         console.log('fail get book')
       }
     },
-    async updateOrder(){
+    async updateOrder() {
       this.order.date_order = getDateForRequest(this.order.date_order);
       console.log(this.order)
       const response = await sendRequest('/order/' + this.order.id, 'PUT', this.order, localStorage.getItem('AccessToken'))
-      if (response.ok){
+      if (response.ok) {
         this.$router.push('/orders')
         console.log('Update Success')
-      }else {
+      } else {
         console.log('Fail update')
       }
     }
@@ -109,7 +110,7 @@ export default {
 </script>
 
 <style scoped>
-.order-card{
+.order-card {
   width: 450px;
   /*height: 200px;*/
   border: none;

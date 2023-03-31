@@ -1,11 +1,11 @@
 <template>
   <HeaderMenu/>
-  <div class="container mt-5 m-1">
+  <div class="container justify-content-center mt-5 p-4">
     <h2>Список книжок</h2>
     <div class="mb-3">
       <input type="text" class="form-control" placeholder="Пошук" v-model="searchTerm" @input="searchBooks">
     </div>
-    <table class="table">
+    <table class="table ">
       <thead>
       <tr>
         <th scope="col">#</th>

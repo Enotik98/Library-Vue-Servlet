@@ -5,19 +5,19 @@
     <h2>Створення Книги</h2>
     <div class="form-group">
       <label for="name">Назва:</label>
-      <input type="text" id="name" class="form-control" v-model="formBook.name">
+      <input type="text" id="name" class="form-control form-control-sm" v-model="formBook.name">
     </div>
     <div class="form-group">
       <label for="author">Автор:</label>
-      <input type="text" id="author" class="form-control" v-model="formBook.author">
+      <input type="text" id="author" class="form-control form-control-sm" v-model="formBook.author">
     </div>
     <div class="form-group">
       <label for="genre">Жанр:</label>
-      <input type="text" id="genre" class="form-control" v-model="formBook.genre">
+      <input type="text" id="genre" class="form-control form-control-sm" v-model="formBook.genre">
     </div>
     <div class="form-group">
       <label for="quantity">Кількість:</label>
-      <input type="number" id="quantity" class="form-control" v-model="formBook.quantity">
+      <input type="number" id="quantity" class="form-control form-control-sm" v-model="formBook.quantity">
     </div>
     <button type="submit" class="btn btn-dark">Створити</button>
   </form>

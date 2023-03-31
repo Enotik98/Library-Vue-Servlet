@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#exampleModal">
+    <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
        Видалити
     </button>
 
@@ -11,7 +11,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Підтвердження видалення</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -19,8 +19,8 @@
             Ви впевнені, що хочете видалити замовлення?
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-dark" data-dismiss="modal">Відміна</button>
-            <button type="button" class="btn btn-outline-danger" data-dismiss="modal" @click="deleteOrder">Видалити</button>
+            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Відміна</button>
+            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" @click="deleteOrder">Видалити</button>
           </div>
         </div>
       </div>

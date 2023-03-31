@@ -8,7 +8,7 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav ">
               <li class="nav-item">
                 <router-link class="nav-link" to="/books">Books</router-link>
               </li>

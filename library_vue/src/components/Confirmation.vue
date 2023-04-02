@@ -42,7 +42,7 @@ export default {
     }
   },
   props: {
-    orderId: this,
+    removeId: this,
     urlPath: {
       type: String,
       required: true
@@ -53,12 +53,15 @@ export default {
       this.deleteObject();
     },
     async deleteObject(){
-      this.order.id = this.orderId
+      this.order.id = this.removeId
       console.log(this.order)
       const response = await sendRequest(this.urlPath, 'DELETE', this.order, localStorage.getItem('AccessToken'));
       if (response.ok){
+        if (this.urlPath === '/user'){
+          localStorage.clear();
+        }
         console.log("Delete Ok" + response)
-        this.$router.push(this.urlPath + 's')
+        this.$router.push('/books')
       }else {
         console.log('fail delete')
       }

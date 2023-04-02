@@ -41,9 +41,11 @@ public class JsonUtils {
         String username = json.getString("username");
         String password = json.getString("password");
         String email = json.getString("email");
-        UserRole role = UserRole.valueOf(json.getString("role").toUpperCase());
+//        UserRole role = UserRole.valueOf(json.getString("role").toUpperCase());
         String hash = UserService.hasPassword(password);
-        return new User(username, password, email, role, hash);
+        String surname = json.getString("surname");
+        String address = json.getString("address");
+        return new User(username, password, email, hash, surname, address);
     }
 
 

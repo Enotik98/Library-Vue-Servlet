@@ -12,10 +12,24 @@
           </div>
         </div>
         <div class="row">
+          <label class="col-6">Призвіще:</label>
+          <div v-if="!showUpdateForm" class="col-6">{{ user.surname }}</div>
+          <div v-else class="col-6">
+            <input type="text" class="form-control form-control-sm" v-model="editedUser.surname">
+          </div>
+        </div>
+        <div class="row">
           <label class="col-6">Email:</label>
           <div v-if="!showUpdateForm" class="col-6">{{ user.email }}</div>
           <div v-else class="col-6">
             <input type="email" class="form-control form-control-sm" v-model="editedUser.email">
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-6">Адреса:</label>
+          <div v-if="!showUpdateForm" class="col-6">{{ user.address }}</div>
+          <div v-else class="col-6">
+            <input type="text" class="form-control form-control-sm" v-model="editedUser.address">
           </div>
         </div>
         <div class="row">
@@ -33,6 +47,9 @@
       <div class="mt-5">
         <OrderCard />
       </div>
+      <div>
+        <ConfirmationWindow url-path="/user" :remove-id="user.id" />
+      </div>
     </div>
   </div>
 </template>
@@ -43,6 +60,7 @@ import HeaderMenu from "@/components/Header.vue";
 import {getBookName, formatDate} from "../../script/utils";
 import order from "../order/Order.vue";
 import OrderCard from "@/components/order/Order.vue";
+import ConfirmationWindow from "@/components/Confirmation.vue";
 
 export default {
   name: "UserInfo",
@@ -51,7 +69,7 @@ export default {
       return order
     }
   },
-  components: {OrderCard, HeaderMenu},
+  components: {ConfirmationWindow, OrderCard, HeaderMenu},
   data() {
     return {
       showUpdateForm: false,
@@ -86,15 +104,16 @@ export default {
         console.log(error);
       }
     },
-    async updateUser(event) {
-      event.preventDefault();
+    async updateUser() {
+      // event.preventDefault();
       try {
         const accessToken = localStorage.getItem('AccessToken');
         const response = await sendRequest("/user", 'PUT', this.editedUser, accessToken);
 
+        console.log(this.editedUser)
         if (response.ok) {
           await this.getUser();
-          await this.changeStatus();
+          this.changeStatus();
         } else {
           console.error('Сталася помилка');
         }

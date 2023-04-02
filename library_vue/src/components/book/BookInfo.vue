@@ -54,7 +54,7 @@
     </div>
   </div>
   <div class="d-flex justify-content-center" v-if="button">
-    <ConfirmationWindow url-path="/book" :order-id="book.id"/>
+    <ConfirmationWindow url-path="/book" :removeId="book.id"/>
     <button v-if="!showUpdate" @click="changeStatus" class="btn btn-outline-dark btn-sm mx-3">Редагувати</button>
     <button v-else @click="updateBook" class="btn btn-outline-dark btn-sm mx-3">Зберегти зміни</button>
   </div>

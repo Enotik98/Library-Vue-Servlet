@@ -29,17 +29,17 @@ public class UserServlet extends HttpServlet {
             //parse path and check role
             if (pathInfo == null || pathInfo.equals("/")) {
                 //get all users
-                if (param.getString("role").equals("ADMIN")){
+                if (param.getString("role").equals("ADMIN")) {
                     PrintWriter out = response.getWriter();
                     response.setContentType("application/JSON");
                     List<User> users = UserService.getListUsers();
                     out.println(JsonUtils.getJsonString(users));
-                }else {
+                } else {
                     response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
                 }
             } else {
                 String pathParam = pathInfo.substring(1);
-                if (pathParam.equals("info")){
+                if (pathParam.equals("info")) {
                     //get user
                     User user = UserService.findUserById(param.getInt("id"));
                     if (user == null) {
@@ -50,7 +50,7 @@ public class UserServlet extends HttpServlet {
                     response.setContentType("application/JSON");
                     out.println(JsonUtils.getJsonString(user));
                 }
-                if (pathParam.equals("order")){
+                if (pathParam.equals("order")) {
                     List<Order> userOrders = OrderService.getOrdersByUserId(param.getInt("id"));
                     if (userOrders == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -61,7 +61,7 @@ public class UserServlet extends HttpServlet {
                     out.println(JsonUtils.getJsonString(userOrders));
                 }
             }
-        }else {
+        } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
@@ -107,6 +107,8 @@ public class UserServlet extends HttpServlet {
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             }
+        }else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
 
     }
@@ -114,17 +116,22 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws
             ServletException, IOException {
-        JSONObject jsonObject = JsonUtils.getJson(request);
-        if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
-            request.setAttribute("errorMessage", "Invalid param");
-            response.getWriter().write("Error Params!");
-            return;
-        }
-        int id = jsonObject.getInt("id");
-        if (UserService.removeUser(id)) {
-            response.getWriter().write("Success Delete!");
-        } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        JSONObject params = TokenManager.verifyAuthorization(request);
+//        JSONObject jsonObject = JsonUtils.getJson(request);
+        if (params != null) {
+//            if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
+//                request.setAttribute("errorMessage", "Invalid param");
+//                response.getWriter().write("Error Params!");
+//                return;
+//            }
+//            int id = jsonObject.getInt("id");
+            if (UserService.removeUser(params.getInt("id"))) {
+                response.getWriter().write("Success Delete!");
+            } else {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            }
+        }else {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 }

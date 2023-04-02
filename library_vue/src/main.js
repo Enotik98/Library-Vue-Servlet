@@ -11,7 +11,8 @@ import CreateBook from "@/components/book/CreateBook.vue";
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.js'
-import 'jquery/dist/jquery.min.js'
+import 'jquery/dist/jquery.js'
+import ModalInfo from "@/components/ModalInfo.vue";
 
 
 const routes = [
@@ -54,6 +55,10 @@ const routes = [
         path: '/add-book',
         name: 'AddBook',
         component: CreateBook
+    },
+    {
+        path: '/check',
+        component: ModalInfo
     }
 ];
 

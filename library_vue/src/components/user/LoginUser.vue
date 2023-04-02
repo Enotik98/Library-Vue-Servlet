@@ -4,12 +4,12 @@
     <form class="border rounded p-4 align-items-center" @submit.prevent="submitForm">
       <h2 class="mb-4">Login</h2>
       <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" class="form-control form-control-sm" id="username" v-model="formData.username" required>
+        <label>Email:</label>
+        <input type="email" class="form-control form-control-sm" v-model="formData.email" required>
       </div>
       <div class="form-group my-3">
-        <label for="password">Password:</label>
-        <input type="password" class="form-control form-control-sm" id="password" v-model="formData.password" required>
+        <label >Password:</label>
+        <input type="password" class="form-control form-control-sm" v-model="formData.password" required>
       </div>
       <router-link to="/registration">Зареєструватись</router-link>
       <button type="submit" class="btn btn-dark float-end">Login</button>
@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       formData: {
-        username: '',
+        email: '',
         password: ''
       }
     }

@@ -12,7 +12,7 @@ public interface UserDao {
     boolean registerUser(User user);
     boolean editUser(User user);
     User getUserFromResultSet(ResultSet resultSet) throws SQLException;
-    User findUser(String username);
+    User findUser(String email);
     User findUser(int id );
     boolean removeUser(int id );
 }

@@ -17,14 +17,27 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private final UserRole role;
+    private UserRole role;
     private String hash;
+    private String surname;
+    private String address;
 
-    public User(String username, String password, String email, UserRole role, String hash) {
+    public User(String username, String password, String email, String hash, String surname, String address) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.hash = hash;
+        this.surname = surname;
+        this.address = address;
+    }
+
+    public User(String username, String password, String email, UserRole role, String hash, String surname, String address) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.hash = hash;
+        this.surname = surname;
+        this.address = address;
     }
 }

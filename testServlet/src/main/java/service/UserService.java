@@ -12,9 +12,9 @@ import java.util.List;
 
 public class UserService {
 
-    public static User findUserByUsername(String username){
+    public static User findUserByEmail(String email){
         UserDao userDao = new UserDaoImpl();
-        return userDao.findUser(username);
+        return userDao.findUser(email);
     }
     public static User findUserById(int id){
         UserDao userDao = new UserDaoImpl();

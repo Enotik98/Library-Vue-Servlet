@@ -22,15 +22,23 @@
         </div>
         <div class="row">
           <span class="col-6">Тип квитка:</span>
-          <span class="col-6">{{ order.type }}</span>
+          <span class="col-6">{{ formatType(order.type) }}</span>
+        </div>
+        <div class="row" v-if="showEdit">
+          <div class="offset-6 col-6">
+            <select v-model="editedOrder.type" class="form-select form-select-sm">
+              <option value="ROOM">Зала</option>
+              <option value="Subscription">Абонемент</option>
+            </select>
+          </div>
         </div>
         <div class="row">
           <span class="col-6">Статус замовлення:</span>
-          <span class="col-6">{{ order.status }}</span>
+          <span class="col-6">{{ formatStatus(order.status) }}</span>
         </div>
-        <div class="row my-2" v-if="showDropdown">
+        <div class="row" v-if="showEdit">
           <div class="offset-6 col-6">
-            <select v-model="order.status" class="form-select form-select-sm ">
+            <select v-model="editedOrder.status" class="form-select form-select-sm ">
               <option value="WAITING">WAITING</option>
               <option value="ISSUED">ISSUED</option>
               <option value="RETURNED">RETURNED</option>
@@ -38,12 +46,12 @@
           </div>
         </div>
         <div class="row me-1 my-1">
-          <button v-if="!showDropdown" @click="changeShow" class="btn btn-sm btn-dark col-4 offset-8">Редагувати
+          <button v-if="!showEdit" @click="changeShow" class="btn btn-sm btn-dark col-4 offset-8">Редагувати
           </button>
           <button v-else @click="updateOrder" class="btn btn-sm btn-dark col-4 offset-8">Зберігти</button>
         </div>
         <div class="row">
-          <ConfirmationWindow :orderId="order.id" urlPath="/order"/>
+          <ConfirmationWindow :removeId="order.id" urlPath="/order"/>
         </div>
       </div>
     </div>
@@ -52,9 +60,10 @@
 
 <script>
 import {sendRequest} from "@/script/request";
-import {formatDate, getDateForRequest} from "../../script/utils";
+import {formatDate, formatType, getDateForRequest, formatStatus} from "@/script/utils";
 import HeaderMenu from "@/components/Header.vue";
 import ConfirmationWindow from "@/components/Confirmation.vue";
+
 
 export default {
   name: "OrderInfo",
@@ -62,19 +71,21 @@ export default {
   data() {
     return {
       order: {},
-      showDropdown: false,
+      editedOrder: {},
+      showEdit: false,
       book: {},
       user: {},
       username: this.$route.query.username
     }
   },
-  props: {},
   mounted() {
     this.getOrder()
   },
   methods: {
+    formatStatus,
+    formatType,
     changeShow() {
-      this.showDropdown = !this.showDropdown
+      this.showEdit = !this.showEdit
     },
     formatDate,
     async getOrder() {
@@ -82,6 +93,7 @@ export default {
       if (response.ok) {
         const data = await response.json();
         this.order = data;
+        this.editedOrder = Object.assign({}, data);
         await this.getBook();
       }
     },

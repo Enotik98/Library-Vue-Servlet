@@ -15,15 +15,15 @@ import java.util.List;
 public class UserDaoImpl implements UserDao {
 
     private static final String ADD_USER_QUERY =
-            "INSERT INTO users(username, password, email, role, hash) VALUES (?, ?, ?, ?::users_type, ?)";
+            "INSERT INTO users(username, password, email, hash, surname, address) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_ALL_USERS_QUERY =
-            "SELECT users.id, username, password, email, role, hash FROM users";
-    private static final String CHECK_USER_BY_USERNAME_QUERY =
-            "SELECT users.id, username, password, email, role, hash FROM users WHERE username = ?";
+            "SELECT users.id, username, password, email, role, hash, surname, address FROM users";
+    private static final String CHECK_USER_BY_EMAIL_QUERY =
+            "SELECT users.id, username, password, email, role, hash, surname, address FROM users WHERE email = ?";
     private static final String CHECK_USER_BY_ID_QUERY =
-            "SELECT users.id, username, password, email, role, hash FROM users WHERE users.id = ?";
+            "SELECT users.id, username, password, email, role, hash, surname, address FROM users WHERE users.id = ?";
     private static final String UPDATE_USER_QUERY =
-            "UPDATE users SET username = ?, password = ?, email = ?, role = ?::users_type, hash = ? WHERE id = ?";
+            "UPDATE users SET username = ?, password = ?, email = ?, hash = ?, surname = ?, address = ? WHERE id = ?";
     private static final String DELETE_USER_QUERY =
             "DELETE FROM users WHERE id = ?";
 
@@ -35,6 +35,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(1, id);
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
+            System.out.println("DeleteUser");
             if (affectedRows <= 0) {
                 System.out.println("can't delete user : " + id);
                 return false;
@@ -58,8 +59,10 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, String.valueOf(user.getRole()).toUpperCase());
-            preparedStatement.setString(5, user.getHash());
+//            preparedStatement.setString(4, String.valueOf(user.getRole()).toUpperCase());
+            preparedStatement.setString(4, user.getHash());
+            preparedStatement.setString(5, user.getSurname());
+            preparedStatement.setString(6, user.getAddress());
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0){
@@ -84,9 +87,10 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, String.valueOf(user.getRole()).toUpperCase());
-            preparedStatement.setString(5, user.getHash());
-            preparedStatement.setInt(6, user.getId());
+            preparedStatement.setString(4, user.getHash());
+            preparedStatement.setString(5, user.getSurname());
+            preparedStatement.setString(6, user.getAddress());
+            preparedStatement.setInt(7, user.getId());
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
 
@@ -102,12 +106,12 @@ public class UserDaoImpl implements UserDao {
         }
     }
     @Override
-    public User findUser(String username){
+    public User findUser(String email){
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
         try (Connection connection = connectionPool.getConnection()){
-            PreparedStatement preparedStatement = connection.prepareStatement(CHECK_USER_BY_USERNAME_QUERY);
-            preparedStatement.setString(1, username);
+            PreparedStatement preparedStatement = connection.prepareStatement(CHECK_USER_BY_EMAIL_QUERY);
+            preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
             if (resultSet.next()){
@@ -167,6 +171,8 @@ public class UserDaoImpl implements UserDao {
         String email = resultSet.getString(4);
         UserRole role = UserRole.valueOf(resultSet.getString(5));
         String hash = resultSet.getString(6);
-        return new User(id, username, password, email, role, hash);
+        String surname = resultSet.getString(7);
+        String address = resultSet.getString(8);
+        return new User(id, username, password, email, role, hash, surname, address);
     }
 }

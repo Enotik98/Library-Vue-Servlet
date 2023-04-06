@@ -1,5 +1,4 @@
 <template>
-  <HeaderMenu/>
   <div class="container mt-5">
     <OrderCard v-if="!isAdmin"/>
     <div v-if="isAdmin" class="mt-5 p-4">
@@ -8,11 +7,11 @@
         <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">UserId</th>
-          <th scope="col">Book</th>
-          <th scope="col">Date_order</th>
-          <th scope="col">Type</th>
-          <th scope="col">Status</th>
+          <th scope="col">Замовник</th>
+          <th scope="col">Книга</th>
+          <th scope="col">Дата замовлення</th>
+          <th scope="col">Квиток</th>
+          <th scope="col">Статус</th>
           <th scope="col"></th>
           <th scope="col"></th>
         </tr>
@@ -24,8 +23,8 @@
           <td>{{ getUsername(order.user_id, users) }}</td>
           <td>{{ getBookName(order.book_id, books) }}</td>
           <td>{{ formatDate(order.date_order) }}</td>
-          <td>{{ order.type }}</td>
-          <td>{{ order.status }}</td>
+          <td>{{ formatType(order.type) }}</td>
+          <td>{{ formatStatus(order.status) }}</td>
           <td>
             <router-link :to="{path:'/order/' + order.id, query: {username: getUsername(order.user_id, users)}}">
               Детально
@@ -45,13 +44,12 @@
 
 <script>
 import {sendRequest} from "@/script/request";
-import {getBookName, formatDate, getUsername} from "@/script/utils"
-import HeaderMenu from "@/components/Header.vue";
+import {getBookName, formatDate, getUsername, formatType, formatStatus} from "@/script/utils"
 import OrderCard from "@/components/order/Order.vue";
 
 export default {
   name: "ListOrder",
-  components: {OrderCard, HeaderMenu},
+  components: {OrderCard},
   data() {
     return {
       orders: [],
@@ -65,6 +63,8 @@ export default {
     this.getOrders()
   },
   methods: {
+    formatStatus,
+    formatType,
     getUsername,
     getBookName,
     formatDate,
@@ -79,9 +79,6 @@ export default {
           this.orders = data;
           await this.getUsers();
           await this.getBooks();
-          console.log(data);
-        } else {
-          console.log('fail getOrders')
         }
         this.isAdmin = response.status !== 406;
       } catch (error) {
@@ -93,8 +90,6 @@ export default {
       if (response.ok) {
         const data = await response.json();
         this.books = data['books'];
-      } else {
-        console.log('fail get books');
       }
 
     },

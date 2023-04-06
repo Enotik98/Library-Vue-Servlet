@@ -14,6 +14,15 @@ public class Book {
     private String author;
     private String genre;
     private int quantity;
+    private int year;
+
+    public Book(String name, String author, String genre, int quantity, int year) {
+        this.name = name;
+        this.author = author;
+        this.genre = genre;
+        this.quantity = quantity;
+        this.year = year;
+    }
 
     public Book(String name, String author, String genre, int quantity) {
         this.name = name;

@@ -1,6 +1,5 @@
 <!--при update потрібно мабуть видалити count -->
 <template>
-  <HeaderMenu/>
   <div class="container d-flex justify-content-center align-items-center mt-5">
     <div class="card mb-5 rounded">
       <div class="row no-gutters">
@@ -11,24 +10,31 @@
         <div class="col-md-9">
           <div class="card-body">
             <div class="row">
-              <span class="text-muted col-3">Title:</span>
+              <span class="text-muted col-3">Назва:</span>
               <span class="card-title col-9" v-if="!showUpdate">{{ book.name }}</span>
               <div v-else class="col-9">
                 <input type="text" class="form-control form-control-sm col-6" v-model="editedBook.name">
               </div>
             </div>
             <div class="row">
-              <span class="text-muted col-3">Author:</span>
-              <span class="text-muted col-9" v-if="!showUpdate">{{ book.author }}</span>
+              <span class="text-muted col-3">Автор:</span>
+              <span class="card-text col-9" v-if="!showUpdate">{{ book.author }}</span>
               <div v-else class="col-9">
                 <input type="text" class="form-control form-control-sm " v-model="editedBook.author">
               </div>
             </div>
             <div class="row">
-              <span class="text-muted col-3">Genre:</span>
+              <span class="text-muted col-3">Жанр:</span>
               <p class="card-text col-8" v-if="!showUpdate">{{ book.genre }}</p>
               <div v-else class="col-9">
                 <input type="text" class="form-control form-control-sm col-6" v-model="editedBook.genre">
+              </div>
+            </div>
+            <div class="row">
+              <span class="text-muted col-3">Рік:</span>
+              <p class="card-text col-8" v-if="!showUpdate">{{ book.year }}</p>
+              <div v-else class="col-9">
+                <input type="number" class="form-control form-control-sm col-6" v-model="editedBook.year">
               </div>
             </div>
             <div class="row" v-if="showUpdate">
@@ -63,12 +69,11 @@
 <script>
 import {sendRequest} from '@/script/request';
 import CreateOrder from "@/components/order/CreateOrder.vue";
-import HeaderMenu from "@/components/Header.vue";
 import ConfirmationWindow from "@/components/Confirmation.vue";
 
 export default {
   name: "BookInfo",
-  components: {ConfirmationWindow, HeaderMenu, CreateOrder},
+  components: {ConfirmationWindow, CreateOrder},
   data() {
     return {
       book: {},
@@ -91,16 +96,14 @@ export default {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           this.book = data;
           this.editedBook = Object.assign({}, data);
           this.button = data['button'];
           delete this.editedBook.count;
           delete this.editedBook.button;
-          console.log(this.book)
           this.isHaveBook = this.book.quantity > this.book.count;
         } else {
-          console.error('Сталася помилка');
+          this.$Notiflix.Notify.success("Виникла помилка!")
         }
       } catch (error) {
         console.error(error);
@@ -111,9 +114,9 @@ export default {
       if (response.ok) {
         await this.getBook();
         await this.changeStatus();
-        console.log('Update Book ok');
+        this.$Notiflix.Notify.success("Успішно!")
       } else {
-        console.log('fail update book');
+        this.$Notiflix.Notify.success("Виникла помилка!")
       }
     }
   }

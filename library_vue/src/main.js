@@ -8,11 +8,13 @@ import BookInfo from "@/components/book/BookInfo.vue";
 import ListOrder from "@/components/order/ListOrder.vue";
 import OrderInfo from "@/components/order/OrderInfo.vue";
 import CreateBook from "@/components/book/CreateBook.vue";
+import App from "@/App.vue";
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.js'
 import 'jquery/dist/jquery.js'
-import ModalInfo from "@/components/ModalInfo.vue";
+import Notiflix from 'notiflix'
+import store from "@/store";
 
 
 const routes = [
@@ -55,10 +57,6 @@ const routes = [
         path: '/add-book',
         name: 'AddBook',
         component: CreateBook
-    },
-    {
-        path: '/check',
-        component: ModalInfo
     }
 ];
 
@@ -67,7 +65,8 @@ const router = createRouter({
     routes,
 });
 // export default router;
-const app = createApp({})
-// app.component("HeaderMenu", Header)
+const app = createApp(App)
 app.use(router)
+app.use(store);
+app.config.globalProperties.$Notiflix = Notiflix;
 app.mount('#app')

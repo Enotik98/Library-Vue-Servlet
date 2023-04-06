@@ -1,18 +1,19 @@
 <template>
+  <h2>Список Замовлень</h2>
   <table class="table">
     <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Book</th>
-      <th scope="col">Date order</th>
-      <th scope="col">Ticket</th>
-      <th scope="col">Status</th>
+      <th scope="col">Назва</th>
+      <th scope="col">Дата замовлення</th>
+      <th scope="col">Квиток</th>
+      <th scope="col">Статус</th>
     </tr>
     </thead>
     <tbody>
     <tr v-for="order in orders" :key="order.id">
       <td>{{ order.id }}</td>
-      <td>{{ bookName(order.book_id, books) }}</td>
+      <td>{{ getBookName(order.book_id, books) }}</td>
       <td>{{ formatDate(order.date_order) }}</td>
       <td>{{ formatType(order.type) }}</td>
       <td>{{ formatStatus(order.status) }}</td>
@@ -40,17 +41,18 @@ export default {
     formatType,
     formatStatus,
     formatDate,
-    bookName: getBookName,
+    getBookName,
     async getUserOrder() {
       try {
         const response = await sendRequest("/user/order", "GET", null, localStorage.getItem('AccessToken'));
         if (response.ok) {
           const data = await response.json();
           this.orders = data;
-          console.log(data)
           await this.getBooks();
         } else {
-          console.log('fail getUserOrder')
+          if (response.status === 401) {
+            this.$router.push('/login')
+          }
         }
       } catch (error) {
         console.error(error)
@@ -63,7 +65,7 @@ export default {
           const data = await response.json();
           this.books = data['books'];
         } else {
-          console.log('fail getBooks')
+          this.$Notiflix.Notify.success("Виникла помилка!")
         }
       } catch (error) {
         console.log(error)

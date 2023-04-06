@@ -16,15 +16,18 @@ import service.UserService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.logging.Logger;
 
 @WebServlet("/user/*")
 public class UserServlet extends HttpServlet {
+    private static final Logger log = Logger.getLogger(UserServlet.class.getName());
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String pathInfo = request.getPathInfo();
         //get header
         JSONObject param = TokenManager.verifyAuthorization(request);
+//        JSONObject param = (JSONObject) request.getAttribute("params");
         if (param != null) {
             //parse path and check role
             if (pathInfo == null || pathInfo.equals("/")) {
@@ -104,6 +107,7 @@ public class UserServlet extends HttpServlet {
             if (UserService.editUser(user)) {
                 System.out.println("update");
                 response.getWriter().write("Success Update!");
+                log.info("Success Update!");
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             }

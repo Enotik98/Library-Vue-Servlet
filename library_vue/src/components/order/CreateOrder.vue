@@ -36,10 +36,13 @@ export default {
       console.log(this.order);
       const response = await sendRequest('/order', 'POST', this.order, localStorage.getItem('AccessToken'));
       if (response.ok) {
-        console.log('Add order OK')
+        this.$Notiflix.Notify.success("Успішно!")
         this.$router.push('/orders');
       } else {
-        console.log('Fail')
+        if (response.status === 401) {
+          this.$router.push('/login')
+        }
+        this.$Notiflix.Notify.failure("Виникла помилка")
       }
     }
   }

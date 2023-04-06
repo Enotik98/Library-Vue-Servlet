@@ -1,5 +1,4 @@
 <template>
-  <HeaderMenu/>
   <div class="container d-flex justify-content-center align-items-center mt-5">
     <div>
       <h2>Інформація про користувача</h2>
@@ -12,7 +11,7 @@
           </div>
         </div>
         <div class="row">
-          <label class="col-6">Призвіще:</label>
+          <label class="col-6">Прізвище:</label>
           <div v-if="!showUpdateForm" class="col-6">{{ user.surname }}</div>
           <div v-else class="col-6">
             <input type="text" class="form-control form-control-sm" v-model="editedUser.surname">
@@ -40,24 +39,22 @@
           </div>
         </div>
         <div class="row offset-7 mt-3 me-1">
-          <button v-if="!showUpdateForm" @click="changeStatus" class="btn btn-dark ">Редагувати</button>
-          <button v-else @click="updateUser" class="btn btn-dark">Зберегти зміни</button>
+          <button v-if="!showUpdateForm" @click="changeStatus" class="btn btn-dark btn-sm">Редагувати</button>
+          <button v-else @click="updateUser" class="btn btn-dark btn-sm">Зберегти зміни</button>
         </div>
       </div>
       <div class="mt-5">
         <OrderCard />
       </div>
-      <div>
-        <ConfirmationWindow url-path="/user" :remove-id="user.id" />
-      </div>
+    </div>
+    <div class="position-absolute bottom-0 mb-4">
+      <ConfirmationWindow url-path="/user" :remove-id="user.id"/>
     </div>
   </div>
 </template>
 
 <script>
 import {sendRequest} from '../../script/request';
-import HeaderMenu from "@/components/Header.vue";
-import {getBookName, formatDate} from "../../script/utils";
 import order from "../order/Order.vue";
 import OrderCard from "@/components/order/Order.vue";
 import ConfirmationWindow from "@/components/Confirmation.vue";
@@ -69,7 +66,7 @@ export default {
       return order
     }
   },
-  components: {ConfirmationWindow, OrderCard, HeaderMenu},
+  components: {ConfirmationWindow, OrderCard},
   data() {
     return {
       showUpdateForm: false,
@@ -83,8 +80,6 @@ export default {
     this.getUser();
   },
   methods: {
-    formatDate,
-    bookName: getBookName,
     changeStatus() {
       this.showUpdateForm = !this.showUpdateForm;
     },
@@ -96,7 +91,6 @@ export default {
           const data = await response.json();
           this.user = data;
           this.editedUser = Object.assign({}, data);
-          console.log("Its OK")
         } else {
           this.$router.push('/login')
         }
@@ -110,12 +104,13 @@ export default {
         const accessToken = localStorage.getItem('AccessToken');
         const response = await sendRequest("/user", 'PUT', this.editedUser, accessToken);
 
-        console.log(this.editedUser)
         if (response.ok) {
           await this.getUser();
           this.changeStatus();
+          this.$Notiflix.Notify.success("Успішно!")
+
         } else {
-          console.error('Сталася помилка');
+          this.$Notiflix.Notify.failure("Виникла помилка")
         }
       } catch (error) {
         console.log(error)

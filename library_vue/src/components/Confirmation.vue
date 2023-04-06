@@ -16,7 +16,7 @@
             </button>
           </div>
           <div class="modal-body">
-            Ви впевнені, що хочете видалити замовлення?
+            Ви впевнені, що хочете видалити?
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Відміна</button>

@@ -20,6 +20,7 @@ public class LoginServlet extends HttpServlet {
         JSONObject jsonObject = JsonUtils.getJson(request);
         String email = jsonObject.getString("email");
         String password = jsonObject.getString("password");
+        response.setContentType("application/JSON");
         if (email != null || password != null) {
             User user = UserService.findUserByEmail(email);
             String hashPassword = UserService.hasPassword(password);
@@ -33,12 +34,13 @@ public class LoginServlet extends HttpServlet {
                 tokens.put("RefreshToken", refresh);
 
                 response.getWriter().write(tokens.toString());
-                response.setContentType("application/JSON");
 
             } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                String errorJson = "{\"error\": \"Невірний логін або пароль\"}";
+                response.getWriter().write(errorJson);
             }
-        }else {
+        } else {
             request.setAttribute("errorMessage", "Invalid email or password!");
             response.getWriter().write("Error login ");
         }

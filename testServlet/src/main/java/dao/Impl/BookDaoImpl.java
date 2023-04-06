@@ -13,17 +13,17 @@ import java.util.List;
 
 public class BookDaoImpl implements BookDao {
     private static final String ADD_BOOK_QUERY =
-            "INSERT INTO books(name, author, genre, quantity) VALUES(?, ?, ?, ?)";
+            "INSERT INTO books(name, author, genre, quantity, year) VALUES(?, ?, ?, ?, ?)";
     private static final String GET_ALL_BOOKS_QUERY =
-            "SELECT id, name, author, genre, quantity FROM books";
+            "SELECT id, name, author, genre, quantity, year FROM books";
     private static final String CHECK_BOOK_QUERY =
-            "SELECT id, name, author, genre, quantity FROM books WHERE id = ?";
+            "SELECT id, name, author, genre, quantity, year FROM books WHERE id = ?";
     private static final String COUNT_BOOK_QUERY =
             "SELECT Count(*) From orders Where book_id = ? AND (status = 'ISSUED' OR status = 'WAITING')";
     //    private static final String COUNT_BOOK_QUERY =
 //            "SELECT Count(*) From orders Join books On orders.book_id = books.id Where books.name = ? AND orders.status = 'ISSUED'";
     private static final String UPDATE_BOOK_QUERY =
-            "UPDATE books SET name = ?, author = ?, genre = ?, quantity = ? WHERE id = ?";
+            "UPDATE books SET name = ?, author = ?, genre = ?, quantity = ?, year = ? WHERE id = ?";
     private static final String DELETE_BOOK_QUERY =
             "DELETE FROM books WHERE id = ?";
 
@@ -58,7 +58,8 @@ public class BookDaoImpl implements BookDao {
             preparedStatement.setString(2, book.getAuthor());
             preparedStatement.setString(3, book.getGenre());
             preparedStatement.setInt(4, book.getQuantity());
-            preparedStatement.setInt(5, book.getId());
+            preparedStatement.setInt(5, book.getYear());
+            preparedStatement.setInt(6, book.getId());
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
 
@@ -108,6 +109,7 @@ public class BookDaoImpl implements BookDao {
             preparedStatement.setString(2, book.getAuthor());
             preparedStatement.setString(3, book.getGenre());
             preparedStatement.setInt(4, book.getQuantity());
+            preparedStatement.setInt(5, book.getYear());
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0) {
@@ -168,6 +170,7 @@ public class BookDaoImpl implements BookDao {
         String author = resultSet.getString(3);
         String genre = resultSet.getString(4);
         int quantity = resultSet.getInt(5);
-        return new Book(id, name, author, genre, quantity);
+        int year = resultSet.getInt(6);
+        return new Book(id, name, author, genre, quantity, year);
     }
 }

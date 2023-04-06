@@ -9,8 +9,8 @@ export function getBookName(bookId, books) {
 }
 
 export function getUsername(userId, users) {
-    const user = users.find(book => book.id === userId)
-    return user ? user.username : 'невідома клієнт'
+    const user = users.find(user => user.id === userId)
+    return user ? user.username : 'невідомий клієнт'
 }
 
 export function getDateForRequest(time) {
@@ -23,7 +23,7 @@ export function formatStatus(status) {
         case 'WAITING':
             return 'Очікує';
         case 'ISSUED':
-            return 'Отримана';
+            return 'Видана';
         case 'RETURNED':
             return 'Повернута';
         default:
@@ -39,4 +39,7 @@ export function formatType(type){
         default:
             return 'unknown';
     }
+}
+export function checkToken(){
+    return  !!localStorage.getItem("AccessToken");
 }

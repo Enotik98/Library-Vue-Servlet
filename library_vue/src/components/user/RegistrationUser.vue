@@ -1,35 +1,42 @@
 <template>
-  <HeaderMenu />
 <div class="container d-flex justify-content-center align-items-center h-100 w-75 mt-5">
   <form class="border rounded p-4" @submit.prevent="submitForm">
   <h2 class="mb-4">Реєстрація</h2>
     <div class="form-group">
-      <label for="username">Username:</label>
-      <input type="text" id="username" class="form-control" v-model="formData.username">
+      <label>Email:</label>
+      <input type="email" class="form-control" v-model="formData.email">
     </div>
     <div class="form-group">
-      <label for="email">Email:</label>
-      <input type="email" id="email" class="form-control" v-model="formData.email">
+      <label>Ім'я:</label>
+      <input type="text" class="form-control" v-model="formData.username">
     </div>
     <div class="form-group">
-      <label for="password">Password:</label>
-      <input type="password" id="password" class="form-control" v-model="formData.password">
+      <label>Прізвище:</label>
+      <input type="text" class="form-control" v-model="formData.surname">
     </div>
-    <button type="submit" class="btn btn-dark float-right">Зареєструватись</button>
+    <div class="form-group">
+      <label>Адреса:</label>
+      <input type="text" class="form-control" v-model="formData.address">
+    </div>
+    <div class="form-group">
+      <label>Password:</label>
+      <input type="password" class="form-control" v-model="formData.password">
+    </div>
+    <button type="submit" class="btn btn-dark float-right mt-3">Зареєструватись</button>
   </form>
 </div>
 </template>
 
 <script>
-import HeaderMenu from "@/components/Header.vue";
 
 export default {
   name: "RegistrationUser",
-  components: {HeaderMenu},
   data(){
     return {
       formData:{
         username: '',
+        surname: '',
+        address: '',
         password: '',
         email: '',
         role: 'CLIENT'
@@ -47,9 +54,10 @@ export default {
           body: JSON.stringify(this.formData)
         });
         if (response.ok){
+          this.$Notiflix.Notify.success("Успішно!")
           this.$router.push('/login')
         }else {
-          console.error('Сталася помилка');
+          this.$Notiflix.Notify.failure("Виникла помилка")
         }
       }catch (error){
         console.error(error);

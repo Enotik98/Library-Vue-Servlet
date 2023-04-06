@@ -54,7 +54,8 @@ public class JsonUtils {
         String author = json.getString("author");
         String genre = json.getString("genre");
         int quantity = json.getInt("quantity");
-        return new Book(name, author, genre, quantity);
+        int year = json.getInt("year");
+        return new Book(name, author, genre, quantity, year);
     }
 
 

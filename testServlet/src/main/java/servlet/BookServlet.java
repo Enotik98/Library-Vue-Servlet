@@ -21,35 +21,33 @@ public class BookServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
-        JSONObject params = TokenManager.verifyAuthorization(request);
+//        JSONObject params = TokenManager.verifyAuthorization(request);
+        JSONObject params = (JSONObject) request.getAttribute("params");
+        PrintWriter out = response.getWriter();
+        response.setContentType("application/JSON");
+        JSONObject jsonObject = new JSONObject();
         if (params != null) {
-            if (pathInfo == null || pathInfo.equals("/")) {
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/JSON");
-                List<Book> books = BookService.getListBook();
-                JSONArray array = new JSONArray(JsonUtils.getJsonString(books));
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("button", params.getString("role").equals("ADMIN"));
-                jsonObject.put("books", array);
-                out.println(jsonObject.toString());
-            } else {
-                int id = Integer.parseInt(pathInfo.substring(1));
-                Book book = BookService.findBookById(id);
-                if (book == null) {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                    return;
-                }
-                int count = BookService.countTakenBook(id);
-                JSONObject jsonObject = new JSONObject(JsonUtils.getJsonString(book));
-                jsonObject.put("count", count);
-                jsonObject.put("button", params.getString("role").equals("ADMIN"));
-                PrintWriter out = response.getWriter();
-                response.setContentType("application/JSON");
-                out.println(jsonObject.toString());
-            }
+            jsonObject.put("button", params.getString("role").equals("ADMIN"));
         }else {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            jsonObject.put("button", false);
         }
+        if (pathInfo == null || pathInfo.equals("/")) {
+            List<Book> books = BookService.getListBook();
+            JSONArray array = new JSONArray(JsonUtils.getJsonString(books));
+            jsonObject.put("books", array);
+        } else {
+            int id = Integer.parseInt(pathInfo.substring(1));
+            Book book = BookService.findBookById(id);
+            if (book == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+            int count = BookService.countTakenBook(id);
+            jsonObject = new JSONObject(JsonUtils.getJsonString(book));
+            jsonObject.put("count", count);
+//            jsonObject.put("button", params.getString("role").equals("ADMIN"));
+        }
+        out.println(jsonObject.toString());
     }
 
     @Override
@@ -78,17 +76,17 @@ public class BookServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject params = TokenManager.verifyAuthorization(request);
-        if (params != null){
+        if (params != null) {
             JSONObject jsonObject = JsonUtils.getJson(request);
             Book book = JsonUtils.parseBookJsonNotId(jsonObject);
             book.setId(jsonObject.getInt("id"));
-            if (BookService.editBook(book)){
+            if (BookService.editBook(book)) {
                 response.getWriter().write("Success Update!");
-            }else {
+            } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             }
 
-        }else {
+        } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }

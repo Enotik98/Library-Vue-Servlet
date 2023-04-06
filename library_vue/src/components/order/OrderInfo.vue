@@ -1,5 +1,4 @@
 <template>
-  <HeaderMenu/>
   <div class="container d-flex justify-content-center align-items-center mt-5">
     <div>
       <h2>Інформація про замовлення</h2>
@@ -28,7 +27,7 @@
           <div class="offset-6 col-6">
             <select v-model="editedOrder.type" class="form-select form-select-sm">
               <option value="ROOM">Зала</option>
-              <option value="Subscription">Абонемент</option>
+              <option value="SUBSCRIPTION">Абонемент</option>
             </select>
           </div>
         </div>
@@ -39,9 +38,9 @@
         <div class="row" v-if="showEdit">
           <div class="offset-6 col-6">
             <select v-model="editedOrder.status" class="form-select form-select-sm ">
-              <option value="WAITING">WAITING</option>
-              <option value="ISSUED">ISSUED</option>
-              <option value="RETURNED">RETURNED</option>
+              <option value="WAITING">Очікує</option>
+              <option value="ISSUED">Видана</option>
+              <option value="RETURNED">Повернута</option>
             </select>
           </div>
         </div>
@@ -61,13 +60,12 @@
 <script>
 import {sendRequest} from "@/script/request";
 import {formatDate, formatType, getDateForRequest, formatStatus} from "@/script/utils";
-import HeaderMenu from "@/components/Header.vue";
 import ConfirmationWindow from "@/components/Confirmation.vue";
 
 
 export default {
   name: "OrderInfo",
-  components: {ConfirmationWindow, HeaderMenu},
+  components: {ConfirmationWindow},
   data() {
     return {
       order: {},
@@ -75,7 +73,7 @@ export default {
       showEdit: false,
       book: {},
       user: {},
-      username: this.$route.query.username
+      username: this.$route.query.username,
     }
   },
   mounted() {
@@ -102,19 +100,16 @@ export default {
       if (response.ok) {
         const data = await response.json()
         this.book = data;
-      } else {
-        console.log('fail get book')
       }
     },
     async updateOrder() {
-      this.order.date_order = getDateForRequest(this.order.date_order);
-      console.log(this.order)
-      const response = await sendRequest('/order/' + this.order.id, 'PUT', this.order, localStorage.getItem('AccessToken'))
+      this.editedOrder.date_order = getDateForRequest(this.editedOrder.date_order);
+      const response = await sendRequest('/order/' + this.order.id, 'PUT', this.editedOrder, localStorage.getItem('AccessToken'))
       if (response.ok) {
         this.$router.push('/orders')
-        console.log('Update Success')
+        this.$Notiflix.Notify.success("Успішно!")
       } else {
-        console.log('Fail update')
+        this.$Notiflix.Notify.success("Виникла помилка!")
       }
     }
   }

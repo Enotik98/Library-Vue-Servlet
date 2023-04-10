@@ -1,5 +1,6 @@
 package servlet;
 
+import org.apache.log4j.Logger;
 import utils.JsonUtils;
 import utils.TokenManager;
 import entity.Book;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @WebServlet("/book/*")
 public class BookServlet extends HttpServlet {
+    private static final Logger log = Logger.getLogger(BookServlet.class);
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
@@ -59,16 +61,11 @@ public class BookServlet extends HttpServlet {
             //create
             if (BookService.addBook(book)) {
                 response.getWriter().write("Success Create!");
+                log.info("Success Create");
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            }
-        } else {
-            int id = Integer.parseInt(pathInfo.substring(1));
-            book.setId(id);
-            if (BookService.editBook(book)) {
-                response.getWriter().write("Success Update!");
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                log.info("Fail Create");
+
             }
         }
     }
@@ -82,8 +79,10 @@ public class BookServlet extends HttpServlet {
             book.setId(jsonObject.getInt("id"));
             if (BookService.editBook(book)) {
                 response.getWriter().write("Success Update!");
+                log.info("Success Update");
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                log.info("Fail Update");
             }
 
         } else {
@@ -97,13 +96,16 @@ public class BookServlet extends HttpServlet {
         if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
             request.setAttribute("errorMessage", "Invalid param");
             response.getWriter().write("Error Params!");
+            log.info("Error Params");
             return;
         }
         int id = jsonObject.getInt("id");
         if (BookService.removeBook(id)) {
             response.getWriter().write("Success Delete!");
+            log.info("Success Delete");
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            log.info("Fail Delete");
         }
     }
 }

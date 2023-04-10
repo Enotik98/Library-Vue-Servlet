@@ -5,6 +5,7 @@ import dao.OrderDao;
 import entity.Order;
 import entity.StatusType;
 import entity.TicketType;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 public class OrderDaoImpl implements OrderDao {
+    private static final Logger log = Logger.getLogger(OrderDaoImpl.class);
     private static final String UPDATE_ORDER_QUERY =
             "UPDATE orders SET user_id = ?, book_id = ?, date_order = ?, status = ?::status_order, type = ?::ticket_type WHERE id = ?";
     private static final String GET_ALL_ORDER_QUERY =
@@ -37,13 +39,13 @@ public class OrderDaoImpl implements OrderDao {
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0) {
-                System.out.println("can't delete order : " + id);
+                log.error("can't delete order : " + id);
                 return false;
             } else {
                 return true;
             }
         } catch (SQLException | InterruptedException e) {
-            System.out.println("deleteOrder : " + e);
+            log.error("deleteOrder : " + e);
             return false;
         }
     }
@@ -65,7 +67,7 @@ public class OrderDaoImpl implements OrderDao {
             }
             return orders;
         } catch (SQLException | InterruptedException e) {
-            System.out.println("getOrderByUserId " + e);
+            log.error("getOrderByUserId " + e);
         }
         return null;
     }
@@ -73,7 +75,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public Order findOrderById(int id) {
         if (id == -1) {
-            System.out.println("Error findByOrder");
+            log.error("Error findByOrder");
             return null;
         }
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
@@ -88,7 +90,7 @@ public class OrderDaoImpl implements OrderDao {
             }
 
         } catch (SQLException | InterruptedException e) {
-            System.out.println("findOrder " + e);
+            log.error("findOrder " + e);
         }
         return null;
     }
@@ -96,7 +98,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public boolean editOrder(Order order) {
         if (order == null) {
-            System.out.println("Error update order");
+            log.error("Error update order");
             return false;
         }
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
@@ -113,13 +115,13 @@ public class OrderDaoImpl implements OrderDao {
             connectionPool.releaseConnection(connection);
 
             if (affectedRows <= 0) {
-                System.out.println("can't update order");
+                log.error("can't update order");
                 return false;
             } else {
                 return true;
             }
         } catch (SQLException | InterruptedException e) {
-            System.out.println("UpdateOrder: " + e);
+            log.error("UpdateOrder: " + e);
             return false;
         }
     }
@@ -127,7 +129,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public boolean createOrder(Order order) {
         if (order == null) {
-            System.out.println("Error create order");
+            log.error("Error create order");
             return false;
         }
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
@@ -142,14 +144,14 @@ public class OrderDaoImpl implements OrderDao {
             connectionPool.releaseConnection(connection);
 
             if (affectedRows <= 0) {
-                System.out.println("can't create order");
+                log.error("can't create order");
                 return false;
             } else {
                 return true;
             }
 
         } catch (SQLException | InterruptedException e) {
-            System.out.println("CreateOrder: " + e);
+            log.error("CreateOrder: " + e);
             return false;
         }
     }
@@ -167,7 +169,7 @@ public class OrderDaoImpl implements OrderDao {
                 orders.add(order);
             }
         } catch (SQLException | InterruptedException e) {
-            System.out.println("getListOrder " + e);
+            log.error("getListOrder " + e);
         }
         return orders;
     }

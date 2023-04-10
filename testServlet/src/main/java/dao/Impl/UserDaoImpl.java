@@ -4,6 +4,7 @@ import Connection.ConnectionPool;
 import dao.UserDao;
 import entity.User;
 import entity.UserRole;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class UserDaoImpl implements UserDao {
 
+    private static final Logger log = Logger.getLogger(UserDaoImpl.class);
     private static final String ADD_USER_QUERY =
             "INSERT INTO users(username, password, email, hash, surname, address) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_ALL_USERS_QUERY =
@@ -35,22 +37,21 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(1, id);
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
-            System.out.println("DeleteUser");
             if (affectedRows <= 0) {
-                System.out.println("can't delete user : " + id);
+                log.error("can't delete user : " + id);
                 return false;
             }else {
                 return true;
             }
         }catch (SQLException | InterruptedException e){
-            System.out.println("removeUser : " + e);
+            log.error("removeUser : " + e);
             return false;
         }
     }
     @Override
     public boolean registerUser(User user){
         if (user == null){
-            System.out.println("Error register");
+            log.error("Error register");
             return false;
         }
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
@@ -66,14 +67,14 @@ public class UserDaoImpl implements UserDao {
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0){
-                System.out.println("can't register user");
+                log.error("can't register user");
                 return false;
             }else {
                 return true;
             }
 
         }catch (SQLException | InterruptedException e){
-            System.out.println("registerUser: " + e);
+            log.error("registerUser: " + e);
             return false;
         }
     }
@@ -95,13 +96,13 @@ public class UserDaoImpl implements UserDao {
             connectionPool.releaseConnection(connection);
 
             if (affectedRows <= 0){
-                System.out.println("can't register user");
+                log.error("can't register user");
                 return false;
             }else {
                 return true;
             }
         }catch (SQLException | InterruptedException e){
-            System.out.println("editUser : " + e);
+            log.error("editUser : " + e);
             return false;
         }
     }
@@ -119,7 +120,7 @@ public class UserDaoImpl implements UserDao {
             }
 
         }catch (SQLException | InterruptedException e){
-            System.out.println("fU : " + e);
+            log.error("fU : " + e);
             return null;
         }
         return null;
@@ -137,7 +138,7 @@ public class UserDaoImpl implements UserDao {
             }
 
         }catch (SQLException | InterruptedException e){
-            System.out.println("fU : " + e);
+            log.error("fU : " + e);
             return null;
         }
         return null;
@@ -162,7 +163,7 @@ public class UserDaoImpl implements UserDao {
                 users.add(new User(id, username, email, surname, address));
             }
         }catch (SQLException | InterruptedException e){
-            System.out.println("getListUsers: " + e);
+            log.error("getListUsers: " + e);
         }
         return users;
     }

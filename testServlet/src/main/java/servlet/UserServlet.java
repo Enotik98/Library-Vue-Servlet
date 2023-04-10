@@ -1,5 +1,6 @@
 package servlet;
 
+import org.apache.log4j.Logger;
 import utils.JsonUtils;
 import utils.TokenManager;
 import entity.Order;
@@ -16,7 +17,7 @@ import service.UserService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.logging.Logger;
+
 
 @WebServlet("/user/*")
 public class UserServlet extends HttpServlet {
@@ -76,16 +77,19 @@ public class UserServlet extends HttpServlet {
         if (!JsonUtils.checkJsonNotEmpty(jsonObject)) {
             request.setAttribute("errorMessage", "Invalid param");
             response.getWriter().write("Error Params!");
+            log.info("doPost Error Params");
             return;
         }
         User user = JsonUtils.parsUserJsonNotId(jsonObject);
         if (user == null) {
             request.setAttribute("errorMessage", "Invalid param");
             response.getWriter().write("Error registration ");
+            log.info("doPost Error Registration");
             return;
         }
         if (UserService.registerUser(user)) {
             response.getWriter().write("Success registration!");
+            log.info("Success registration");
         } else {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
@@ -98,8 +102,6 @@ public class UserServlet extends HttpServlet {
 
         if (param != null) {
 
-            System.out.println("OK");
-
             JSONObject jsonObject = JsonUtils.getJson(request);
             User user = JsonUtils.parsUserJsonNotId(jsonObject);
 
@@ -110,6 +112,7 @@ public class UserServlet extends HttpServlet {
                 log.info("Success Update!");
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                log.info("Fail Update");
             }
         }else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -131,8 +134,10 @@ public class UserServlet extends HttpServlet {
 //            int id = jsonObject.getInt("id");
             if (UserService.removeUser(params.getInt("id"))) {
                 response.getWriter().write("Success Delete!");
+                log.info("Success Delete");
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                log.info("Fail Delete");
             }
         }else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

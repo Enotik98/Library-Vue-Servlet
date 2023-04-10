@@ -3,6 +3,7 @@ package dao.Impl;
 import Connection.ConnectionPool;
 import dao.BookDao;
 import entity.Book;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookDaoImpl implements BookDao {
+    private static final Logger log = Logger.getLogger(BookDaoImpl.class);
     private static final String ADD_BOOK_QUERY =
             "INSERT INTO books(name, author, genre, quantity, year) VALUES(?, ?, ?, ?, ?)";
     private static final String GET_ALL_BOOKS_QUERY =
@@ -36,13 +38,13 @@ public class BookDaoImpl implements BookDao {
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0) {
-                System.out.println("can't delete book");
+                log.error("can't delete book");
                 return false;
             } else {
                 return true;
             }
         } catch (SQLException | InterruptedException e) {
-            System.out.println("removeBook: " + e);
+            log.error("removeBook: " + e);
             return false;
         }
     }
@@ -64,13 +66,13 @@ public class BookDaoImpl implements BookDao {
             connectionPool.releaseConnection(connection);
 
             if (affectedRows <= 0) {
-                System.out.println("can't update book");
+                log.error("can't update book");
                 return false;
             } else {
                 return true;
             }
         } catch (SQLException | InterruptedException e) {
-            System.out.println("editBook: " + e);
+            log.error("editBook: " + e);
             return false;
         }
     }
@@ -91,7 +93,7 @@ public class BookDaoImpl implements BookDao {
             }
 
         } catch (SQLException | InterruptedException e) {
-            System.out.println("countTakenBook: " + e);
+            log.error("countTakenBook: " + e);
         }
         return -1;
     }
@@ -99,7 +101,7 @@ public class BookDaoImpl implements BookDao {
     @Override
     public boolean addBook(Book book) {
         if (book == null) {
-            System.out.println("Error add book");
+            log.error("Error add book");
             return false;
         }
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
@@ -113,13 +115,13 @@ public class BookDaoImpl implements BookDao {
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0) {
-                System.out.println("can't add book");
+                log.error("can't add book");
                 return false;
             } else {
                 return true;
             }
         } catch (SQLException | InterruptedException e) {
-            System.out.println("addBook: " + e);
+            log.error("addBook: " + e);
             return false;
         }
     }
@@ -139,7 +141,7 @@ public class BookDaoImpl implements BookDao {
             }
 
         } catch (SQLException | InterruptedException e) {
-            System.out.println("fb: " + e);
+            log.error("fb: " + e);
         }
         return null;
     }
@@ -158,7 +160,7 @@ public class BookDaoImpl implements BookDao {
             connectionPool.releaseConnection(connection);
 
         } catch (SQLException | InterruptedException e) {
-            System.out.println("getListBook: " + e);
+            log.error("getListBook: " + e);
         }
 
         return books;

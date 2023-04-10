@@ -1,5 +1,6 @@
 package servlet;
 
+import org.apache.log4j.Logger;
 import utils.JsonUtils;
 import utils.TokenManager;
 import entity.Order;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @WebServlet("/order/*")
 public class OrderServlet extends HttpServlet {
+    private static final Logger log = Logger.getLogger(OrderServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -66,8 +68,12 @@ public class OrderServlet extends HttpServlet {
             order.setDate_order(new Date(System.currentTimeMillis()));
             if (OrderService.createOrder(order)) {
                 response.getWriter().write("Success Create!");
+                log.info("Success Create");
+
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                log.info("Fail Create");
+
             }
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
@@ -86,8 +92,10 @@ public class OrderServlet extends HttpServlet {
                 order.setId(id);
                 if (OrderService.editOrder(order)) {
                     response.getWriter().write("Success Update!");
+                    log.info("Success Update");
                 } else {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                    log.info("Fail Update");
                 }
             }
         } else {
@@ -103,14 +111,18 @@ public class OrderServlet extends HttpServlet {
         if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
             request.setAttribute("errorMessage", "Invalid param");
             response.getWriter().write("Error Params!");
+            log.info("Error Params");
             return;
         }
         if (params != null) {
             int id = jsonObject.getInt("id");
             if (OrderService.deleteOrder(id)) {
                 response.getWriter().write("Success Delete!");
+                log.info("Success Delete");
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                log.info("Fail Delete");
+
             }
         }else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

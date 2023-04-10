@@ -1,5 +1,6 @@
 package servlet;
 
+import org.apache.log4j.Logger;
 import utils.JsonUtils;
 import utils.TokenManager;
 import entity.User;
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(LoginServlet.class);
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonUtils.getJson(request);
@@ -32,7 +34,6 @@ public class LoginServlet extends HttpServlet {
                 JSONObject tokens = new JSONObject();
                 tokens.put("AccessToken", access);
                 tokens.put("RefreshToken", refresh);
-
                 response.getWriter().write(tokens.toString());
 
             } else {
@@ -43,7 +44,7 @@ public class LoginServlet extends HttpServlet {
         } else {
             request.setAttribute("errorMessage", "Invalid email or password!");
             response.getWriter().write("Error login ");
+            logger.error("Error login");
         }
     }
-
 }

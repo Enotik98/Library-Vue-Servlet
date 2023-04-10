@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import entity.*;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import service.UserService;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JsonUtils {
+    public static final Logger log = Logger.getLogger(JsonUtils.class);
     public static JSONObject getJson(HttpServletRequest request) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader reader = request.getReader();
@@ -32,7 +34,7 @@ public class JsonUtils {
             ObjectMapper objectMapper = new ObjectMapper();
             json = objectMapper.writeValueAsString(obj);
         }catch (JsonProcessingException e ){
-            e.printStackTrace();
+           log.info(e);
         }
         return json;
     }

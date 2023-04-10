@@ -10,8 +10,9 @@ export function getBookName(bookId, books) {
 
 export function getUsername(userId, users) {
     const user = users.find(user => user.id === userId)
-    return user ? user.username : 'невідомий клієнт'
+    return user ? user : 'невідомий клієнт'
 }
+// export
 
 export function getDateForRequest(time) {
     const date = new Date(time);

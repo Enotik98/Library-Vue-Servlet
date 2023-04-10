@@ -20,16 +20,16 @@
 
         <tr v-for="order in orders" :key="order.id">
           <td>{{ order.id }}</td>
-          <td>{{ getUsername(order.user_id, users) }}</td>
+          <td>{{ getUsername(order.user_id, users).username }}</td>
           <td>{{ getBookName(order.book_id, books) }}</td>
           <td>{{ formatDate(order.date_order) }}</td>
           <td>{{ formatType(order.type) }}</td>
           <td>{{ formatStatus(order.status) }}</td>
           <td>
-            <router-link :to="{path:'/order/' + order.id, query: {username: getUsername(order.user_id, users)}}">
+            <router-link :to="{path:'/order/' + order.id, query: {userData: JSON.stringify(getUsername(order.user_id, users))}}">
               Детально
             </router-link>
-            <!--              <button @click="updateOrder(order.id)" class="btn btn-dark btn-sm">Update</button>-->
+<!--            <button @click="goToOrderDetail(order.id, getUsername(order.user_id, users))" class="btn btn-dark btn-sm">Update</button>-->
           </td>
           <td>
           </td>
@@ -68,8 +68,14 @@ export default {
     getUsername,
     getBookName,
     formatDate,
-    updateOrder(orderId) {
-      this.$router.push('/order/' + orderId)
+    goToOrderDetail(orderId, user) {
+      const data = Object.assign({}, user);
+      this.$router.push({
+        path: '/order/' + orderId,
+        query: {
+          userData: JSON.stringify(data),
+        }
+      })
     },
     async getOrders() {
       try {

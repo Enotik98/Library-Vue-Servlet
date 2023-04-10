@@ -2,14 +2,14 @@
   <div class="container d-flex justify-content-center align-items-center mt-5">
     <div>
       <h2>Інформація про замовлення</h2>
-      <div class="order-card rounded">
+      <div class="card rounded mb-4">
         <div class="row">
           <span class="col-6">Номер замовлення:</span>
           <span class="col-6">{{ order.id }}</span>
         </div>
         <div class="row">
           <span class="col-6">Замовник:</span>
-          <span class="col-6">{{ username }}</span>
+          <span class="col-6">{{ userData.username }}</span>
         </div>
         <div class="row">
           <span class="col-6">Книга:</span>
@@ -53,6 +53,25 @@
           <ConfirmationWindow :removeId="order.id" urlPath="/order"/>
         </div>
       </div>
+      <h2 >Замовник:</h2>
+      <div class="card rounded">
+        <div class="row">
+          <div class="col-6">Ім'я</div>
+          <div class="col-6">{{userData.username}}</div>
+        </div>
+        <div class="row">
+          <div class="col-6">Прізвище</div>
+          <div class="col-6">{{userData.surname}}</div>
+        </div>
+        <div class="row">
+          <div class="col-6">Email</div>
+          <div class="col-6">{{userData.email}}</div>
+        </div>
+        <div class="row">
+          <div class="col-6">Адреса</div>
+          <div class="col-6">{{userData.address}}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -73,7 +92,8 @@ export default {
       showEdit: false,
       book: {},
       user: {},
-      username: this.$route.query.username,
+      userData: JSON.parse(this.$route.query.userData)
+      // orderUser: this.$route.query.username,
     }
   },
   mounted() {
@@ -86,7 +106,9 @@ export default {
       this.showEdit = !this.showEdit
     },
     formatDate,
+
     async getOrder() {
+      // console.log(JSON.parse(this.userData))
       const response = await sendRequest('/order/' + this.$route.params.id, 'GET', null, localStorage.getItem('AccessToken'))
       if (response.ok) {
         const data = await response.json();
@@ -117,7 +139,7 @@ export default {
 </script>
 
 <style scoped>
-.order-card {
+.card {
   width: 450px;
   /*height: 200px;*/
   border: none;

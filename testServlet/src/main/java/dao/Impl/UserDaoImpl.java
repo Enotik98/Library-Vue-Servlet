@@ -17,7 +17,7 @@ public class UserDaoImpl implements UserDao {
     private static final String ADD_USER_QUERY =
             "INSERT INTO users(username, password, email, hash, surname, address) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_ALL_USERS_QUERY =
-            "SELECT users.id, username, password, email, role, hash, surname, address FROM users";
+            "SELECT users.id, username, email, surname, address FROM users";
     private static final String CHECK_USER_BY_EMAIL_QUERY =
             "SELECT users.id, username, password, email, role, hash, surname, address FROM users WHERE email = ?";
     private static final String CHECK_USER_BY_ID_QUERY =
@@ -154,8 +154,12 @@ public class UserDaoImpl implements UserDao {
             connectionPool.releaseConnection(connection);
 
             while (resultSet.next()){
-                User user = getUserFromResultSet(resultSet);
-                users.add(user);
+                int id = resultSet.getInt(1);
+                String username = resultSet.getString(2);
+                String email = resultSet.getString(3);
+                String surname = resultSet.getString(4);
+                String address = resultSet.getString(5);
+                users.add(new User(id, username, email, surname, address));
             }
         }catch (SQLException | InterruptedException e){
             System.out.println("getListUsers: " + e);

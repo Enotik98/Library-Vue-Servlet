@@ -22,6 +22,14 @@ public class User {
     private String surname;
     private String address;
 
+    public User(int id, String username, String email, String surname, String address) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.surname = surname;
+        this.address = address;
+    }
+
     public User(String username, String password, String email, String hash, String surname, String address) {
         this.username = username;
         this.password = password;

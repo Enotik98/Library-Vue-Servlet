@@ -23,7 +23,9 @@ public class OrderServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
         //get header and verify accessToken
-        JSONObject param = TokenManager.verifyAuthorization(request);
+//        JSONObject param = TokenManager.verifyAuthorization(request);
+        JSONObject param = (JSONObject) request.getAttribute("params");
+
         if (param != null) {
             //get param in token
             if (pathInfo == null || pathInfo.equals("/")) {

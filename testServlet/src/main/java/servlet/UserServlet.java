@@ -26,8 +26,8 @@ public class UserServlet extends HttpServlet {
 
         String pathInfo = request.getPathInfo();
         //get header
-        JSONObject param = TokenManager.verifyAuthorization(request);
-//        JSONObject param = (JSONObject) request.getAttribute("params");
+        JSONObject param = (JSONObject) request.getAttribute("params");
+//        JSONObject param = TokenManager.verifyAuthorization(request);
         if (param != null) {
             //parse path and check role
             if (pathInfo == null || pathInfo.equals("/")) {

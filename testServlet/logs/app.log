@@ -1,2 +1,7 @@
-2023-04-10 21:22:57,205 INFO [servlet.UserServlet] - Success Update!
-2023-04-10 21:23:18,455 INFO [servlet.OrderServlet] - Success Delete
+2023-04-12 17:35:38,796 INFO [utils.TokenManager] - tokenValid io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-12T14:32:06Z. Current time: 2023-04-12T14:35:38Z, a difference of 212794 milliseconds.  Allowed clock skew: 0 milliseconds.
+2023-04-12 17:46:53,684 INFO [utils.TokenManager] - tokenValid io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-12T14:36:38Z. Current time: 2023-04-12T14:46:53Z, a difference of 615684 milliseconds.  Allowed clock skew: 0 milliseconds.
+2023-04-12 17:46:53,684 INFO [utils.TokenManager] - tokenValid io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-12T14:36:38Z. Current time: 2023-04-12T14:46:53Z, a difference of 615684 milliseconds.  Allowed clock skew: 0 milliseconds.
+2023-04-12 17:58:28,696 INFO [utils.TokenManager] - tokenValid io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-12T14:47:53Z. Current time: 2023-04-12T14:58:28Z, a difference of 635696 milliseconds.  Allowed clock skew: 0 milliseconds.
+2023-04-12 17:58:28,696 INFO [utils.TokenManager] - tokenValid io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-12T14:47:53Z. Current time: 2023-04-12T14:58:28Z, a difference of 635696 milliseconds.  Allowed clock skew: 0 milliseconds.
+2023-04-12 18:20:17,353 INFO [utils.TokenManager] - tokenValid io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-12T14:59:28Z. Current time: 2023-04-12T15:20:17Z, a difference of 1249353 milliseconds.  Allowed clock skew: 0 milliseconds.
+2023-04-12 18:20:17,353 INFO [utils.TokenManager] - tokenValid io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-12T14:59:28Z. Current time: 2023-04-12T15:20:17Z, a difference of 1249353 milliseconds.  Allowed clock skew: 0 milliseconds.

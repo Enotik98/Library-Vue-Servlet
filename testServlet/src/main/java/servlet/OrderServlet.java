@@ -38,7 +38,7 @@ public class OrderServlet extends HttpServlet {
                     List<Order> orders = OrderService.getListOrders();
                     out.println(JsonUtils.getJsonString(orders));
                 } else {
-                    response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 }
             } else {
                 int id = Integer.parseInt(pathInfo.substring(1));
@@ -59,7 +59,8 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        JSONObject param = TokenManager.verifyAuthorization(request);
+        JSONObject param = (JSONObject) request.getAttribute("params");
+
         if (param != null) {
             System.out.println("Order OK");
             JSONObject jsonOrder = JsonUtils.getJson(request);
@@ -84,7 +85,7 @@ public class OrderServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
         JSONObject jsonObject = JsonUtils.getJson(request);
-        JSONObject params = TokenManager.verifyAuthorization(request);
+        JSONObject params = (JSONObject) request.getAttribute("params");
         if (params != null) {
             if ((pathInfo != null || !pathInfo.equals("/")) && params.getString("role").equals("ADMIN")) {
                 Order order = JsonUtils.parseOrderJsonNotIdWithStatus(jsonObject);
@@ -107,14 +108,14 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonUtils.getJson(request);
-        JSONObject params = TokenManager.verifyAuthorization(request);
+        JSONObject params = (JSONObject) request.getAttribute("params");
         if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
             request.setAttribute("errorMessage", "Invalid param");
             response.getWriter().write("Error Params!");
             log.info("Error Params");
             return;
         }
-        if (params != null) {
+        if (params != null && params.getString("role").equals("ADMIN")) {
             int id = jsonObject.getInt("id");
             if (OrderService.deleteOrder(id)) {
                 response.getWriter().write("Success Delete!");

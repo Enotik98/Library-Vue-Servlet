@@ -10,8 +10,8 @@ import OrderInfo from "@/components/order/OrderInfo.vue";
 import CreateBook from "@/components/book/CreateBook.vue";
 import App from "@/App.vue";
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.js'
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
 import 'jquery/dist/jquery.js'
 import Notiflix from 'notiflix'
 import store from "@/store";
@@ -41,7 +41,7 @@ const routes = [
     {
         path: '/book/:id',
         name: 'BookInfo',
-        component: BookInfo
+        component: BookInfo,
     },
     {
         path: '/orders',

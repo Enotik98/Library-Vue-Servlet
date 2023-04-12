@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="my-1">
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
        Видалити

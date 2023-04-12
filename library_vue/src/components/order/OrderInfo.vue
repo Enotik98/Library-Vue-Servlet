@@ -44,10 +44,10 @@
             </select>
           </div>
         </div>
-        <div class="row me-1 my-1">
-          <button v-if="!showEdit" @click="changeShow" class="btn btn-sm btn-dark col-4 offset-8">Редагувати
-          </button>
-          <button v-else @click="updateOrder" class="btn btn-sm btn-dark col-4 offset-8">Зберігти</button>
+        <div class="row my-2 offset-7">
+          <button v-if="!showEdit" @click="changeShow" class="btn btn-sm btn-dark col-12 ">Редагувати</button>
+          <button v-else @click="updateOrder" class="btn btn-sm btn-outline-dark col-6 me-1">Зберігти</button>
+          <button v-if="showEdit" @click="changeShow" class="btn btn-sm btn-dark col-5 ">Відміна</button>
         </div>
         <div class="row">
           <ConfirmationWindow :removeId="order.id" urlPath="/order"/>

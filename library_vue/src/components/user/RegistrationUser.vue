@@ -4,23 +4,23 @@
   <h2 class="mb-4">Реєстрація</h2>
     <div class="form-group">
       <label>Email:</label>
-      <input type="email" class="form-control" v-model="formData.email">
+      <input type="email" maxlength="30" class="form-control" v-model="formData.email" required>
     </div>
     <div class="form-group">
       <label>Ім'я:</label>
-      <input type="text" class="form-control" v-model="formData.username">
+      <input type="text" maxlength="25" class="form-control" v-model="formData.username" required>
     </div>
     <div class="form-group">
       <label>Прізвище:</label>
-      <input type="text" class="form-control" v-model="formData.surname">
+      <input type="text" maxlength="30" class="form-control" v-model="formData.surname" required>
     </div>
     <div class="form-group">
       <label>Адреса:</label>
-      <input type="text" class="form-control" v-model="formData.address">
+      <input type="text" class="form-control" maxlength="50" v-model="formData.address" required>
     </div>
     <div class="form-group">
       <label>Password:</label>
-      <input type="password" class="form-control" v-model="formData.password">
+      <input type="password" maxlength="20" minlength="6" class="form-control" v-model="formData.password" required>
     </div>
     <button type="submit" class="btn btn-dark float-right mt-3">Зареєструватись</button>
   </form>

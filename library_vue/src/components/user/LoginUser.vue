@@ -4,11 +4,11 @@
       <h2 class="mb-4">Login</h2>
       <div class="form-group">
         <label>Email:</label>
-        <input type="email" class="form-control form-control-sm" v-model="formData.email" required>
+        <input type="email" maxlength="30" class="form-control form-control-sm" v-model="formData.email" required>
       </div>
       <div class="form-group my-3">
         <label>Password:</label>
-        <input type="password" class="form-control form-control-sm" v-model="formData.password" required>
+        <input type="password" maxlength="20" minlength="4" class="form-control form-control-sm" v-model="formData.password" required>
       </div>
       <router-link to="/registration">Зареєструватись</router-link>
       <button type="submit" class="btn btn-dark float-end">Login</button>
@@ -43,6 +43,8 @@ export default {
           body: JSON.stringify(this.formData)
         });
 
+        // console.log(response)
+        // console.log(response.json())
         if (response.status === 401){
           const data = await response.json();
           this.$Notiflix.Notify.failure(data["error"])

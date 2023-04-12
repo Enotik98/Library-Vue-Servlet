@@ -1,17 +1,15 @@
 <template>
-  <div>
     <div class="container">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark border rounded p-3">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">Library</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                  aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
             <ul class="navbar-nav ">
               <li class="nav-item">
-                <router-link class="nav-link" to="/books">Books</router-link>
+                <router-link class="nav-link " to="/books">Books</router-link>
               </li>
               <li class="nav-item">
                 <router-link class="nav-link" to="/profile">Profile</router-link>
@@ -28,7 +26,6 @@
         </div>
       </nav>
     </div>
-  </div>
 </template>
 
 <script>

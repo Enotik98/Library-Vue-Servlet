@@ -39,7 +39,8 @@ public class UserServlet extends HttpServlet {
                     List<User> users = UserService.getListUsers();
                     out.println(JsonUtils.getJsonString(users));
                 } else {
-                    response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write("Access denied. Admin access required.");
                 }
             } else {
                 String pathParam = pathInfo.substring(1);
@@ -98,10 +99,9 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws
             ServletException, IOException {
-        JSONObject param = TokenManager.verifyAuthorization(request);
+        JSONObject param = (JSONObject) request.getAttribute("params");
 
         if (param != null) {
-
             JSONObject jsonObject = JsonUtils.getJson(request);
             User user = JsonUtils.parsUserJsonNotId(jsonObject);
 
@@ -123,9 +123,9 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws
             ServletException, IOException {
-        JSONObject params = TokenManager.verifyAuthorization(request);
+        JSONObject params = (JSONObject) request.getAttribute("params");
 //        JSONObject jsonObject = JsonUtils.getJson(request);
-        if (params != null) {
+        if (params != null && params.getString("role").equals("ADMIN")) {
 //            if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
 //                request.setAttribute("errorMessage", "Invalid param");
 //                response.getWriter().write("Error Params!");

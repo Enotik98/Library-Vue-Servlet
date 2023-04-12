@@ -57,7 +57,8 @@ public class BookServlet extends HttpServlet {
         String pathInfo = request.getPathInfo();
         JSONObject jsonObject = JsonUtils.getJson(request);
         Book book = JsonUtils.parseBookJsonNotId(jsonObject);
-        if (pathInfo == null || pathInfo.equals("/")) {
+        JSONObject params = (JSONObject) request.getAttribute("params");
+        if ((pathInfo == null || pathInfo.equals("/")) && params.getString("role").equals("ADMIN")) {
             //create
             if (BookService.addBook(book)) {
                 response.getWriter().write("Success Create!");
@@ -72,8 +73,8 @@ public class BookServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        JSONObject params = TokenManager.verifyAuthorization(request);
-        if (params != null) {
+        JSONObject params = (JSONObject) request.getAttribute("params");
+        if (params != null && params.getString("role").equals("ADMIN")) {
             JSONObject jsonObject = JsonUtils.getJson(request);
             Book book = JsonUtils.parseBookJsonNotId(jsonObject);
             book.setId(jsonObject.getInt("id"));
@@ -93,19 +94,25 @@ public class BookServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonUtils.getJson(request);
-        if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
-            request.setAttribute("errorMessage", "Invalid param");
-            response.getWriter().write("Error Params!");
-            log.info("Error Params");
-            return;
-        }
-        int id = jsonObject.getInt("id");
-        if (BookService.removeBook(id)) {
-            response.getWriter().write("Success Delete!");
-            log.info("Success Delete");
-        } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-            log.info("Fail Delete");
+        JSONObject params = (JSONObject) request.getAttribute("params");
+        if (params.getString("role").equals("ADMIN")) {
+            if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
+                request.setAttribute("errorMessage", "Invalid param");
+                response.getWriter().write("Error Params!");
+                log.info("Error Params");
+                return;
+            }
+            int id = jsonObject.getInt("id");
+            if (BookService.removeBook(id)) {
+                response.getWriter().write("Success Delete!");
+                log.info("Success Delete");
+            } else {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                log.info("Fail Delete");
+            }
+        }else {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("Access denied. Admin access required.");
         }
     }
 }

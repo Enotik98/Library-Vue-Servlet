@@ -14,11 +14,9 @@ import java.io.IOException;
 public class RefreshTokenServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String refreshToken = authorizationHeader.substring(7);
-            if (TokenManager.verifyToken(refreshToken)) {
-                JSONObject param = TokenManager.getParamToken(refreshToken);
+        JSONObject param = (JSONObject) request.getAttribute("params");
+
+            if (param != null) {
                 System.out.println("id " + param.getInt("id"));
                 System.out.println("role " + param.getString("role"));
 
@@ -33,6 +31,5 @@ public class RefreshTokenServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             }
 
-        }
     }
 }

@@ -26,7 +26,7 @@
         <td>{{ book.genre }}</td>
         <td>{{ book.year }}</td>
         <td>
-          <button class="btn btn-dark" @click="toBook(book.id)">Замовити</button>
+          <router-link class="btn btn-dark btn-sm" :to="{name: 'BookInfo', params: {id: book.id}} ">Замовити</router-link>
         </td>
       </tr>
       </tbody>
@@ -51,9 +51,6 @@ export default {
     this.getBooks();
   },
   methods: {
-    toBook(id) {
-      this.$router.push('/book/' + id);
-    },
     searchBooks() {
       if (this.searchTerm === '') {
         this.getBooks();

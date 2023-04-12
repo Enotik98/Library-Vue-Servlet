@@ -1,19 +1,19 @@
 <template>
   <div class="container mt-5">
     <OrderCard v-if="!isAdmin"/>
-    <div v-if="isAdmin" class="mt-5 p-4">
+    <div v-if="isAdmin" class="mt-5 p-4 table-responsive">
       <h2>Список Замовлень</h2>
       <table class="table">
         <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">Замовник</th>
-          <th scope="col">Книга</th>
-          <th scope="col">Дата замовлення</th>
-          <th scope="col">Квиток</th>
-          <th scope="col">Статус</th>
-          <th scope="col"></th>
-          <th scope="col"></th>
+          <th >#</th>
+          <th >Замовник</th>
+          <th >Книга</th>
+          <th >Дата замовлення</th>
+          <th >Квиток</th>
+          <th >Статус</th>
+          <th ></th>
+          <th ></th>
         </tr>
         </thead>
         <tbody>
@@ -26,12 +26,9 @@
           <td>{{ formatType(order.type) }}</td>
           <td>{{ formatStatus(order.status) }}</td>
           <td>
-            <router-link :to="{path:'/order/' + order.id, query: {userData: JSON.stringify(getUsername(order.user_id, users))}}">
+            <router-link class="btn btn-dark btn-sm" :to="{path:'/order/' + order.id, query: {userData: JSON.stringify(getUsername(order.user_id, users))}}">
               Детально
             </router-link>
-<!--            <button @click="goToOrderDetail(order.id, getUsername(order.user_id, users))" class="btn btn-dark btn-sm">Update</button>-->
-          </td>
-          <td>
           </td>
         </tr>
         </tbody>
@@ -68,15 +65,6 @@ export default {
     getUsername,
     getBookName,
     formatDate,
-    goToOrderDetail(orderId, user) {
-      const data = Object.assign({}, user);
-      this.$router.push({
-        path: '/order/' + orderId,
-        query: {
-          userData: JSON.stringify(data),
-        }
-      })
-    },
     async getOrders() {
       try {
         const response = await sendRequest('/order', 'GET', null, localStorage.getItem('AccessToken'));
@@ -86,7 +74,7 @@ export default {
           await this.getUsers();
           await this.getBooks();
         }
-        this.isAdmin = response.status !== 406;
+        this.isAdmin = response.status !== 403;
       } catch (error) {
         console.error(error);
       }

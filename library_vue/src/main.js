@@ -14,10 +14,20 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 import 'jquery/dist/jquery.js'
 import Notiflix from 'notiflix'
-import store from "@/store";
+import store from "@/script/store";
 
 
 const routes = [
+    {
+        path: '/',
+        name: 'ListBook',
+        component: ListBook
+    },
+    {
+        path: '/book/:id',
+        name: 'BookInfo',
+        component: BookInfo,
+    },
     {
         path: "/profile",
         name: "UserInfo",
@@ -32,16 +42,6 @@ const routes = [
         path: '/registration',
         name: 'RegistrationUser',
         component: RegistrationUser
-    },
-    {
-        path: '/books',
-        name: 'ListBook',
-        component: ListBook
-    },
-    {
-        path: '/book/:id',
-        name: 'BookInfo',
-        component: BookInfo,
     },
     {
         path: '/orders',
@@ -64,7 +64,6 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
-// export default router;
 const app = createApp(App)
 app.use(router)
 app.use(store);

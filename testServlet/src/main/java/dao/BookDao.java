@@ -12,7 +12,7 @@ public interface BookDao {
     int countTakenBook(int id);
     boolean removeBook(int id);
     List<Book> getListBook();
-    Book findBookById(int id);
+    Book getBook(int id);
 
     Book getBookFromResultSet(ResultSet resultSet) throws SQLException;
 }

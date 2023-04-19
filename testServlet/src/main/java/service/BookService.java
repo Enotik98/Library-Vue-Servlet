@@ -3,7 +3,6 @@ package service;
 import dao.BookDao;
 import dao.Impl.BookDaoImpl;
 import entity.Book;
-import lombok.AllArgsConstructor;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class BookService {
     }
     public static Book findBookById(int id){
         BookDao bookDao = new BookDaoImpl();
-        return bookDao.findBookById(id);
+        return bookDao.getBook(id);
     }
     public static int countTakenBook(int id){
         BookDao bookDao = new BookDaoImpl();

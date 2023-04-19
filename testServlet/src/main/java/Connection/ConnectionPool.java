@@ -21,7 +21,6 @@ public class ConnectionPool {
             System.out.println("JDBC Driver not found");
         }
         connections = new LinkedBlockingQueue<>(MAX_CONNECTION);
-//        connections = new LinkedBlockingQueue<>();
         try {
             for (int i = 0; i < MAX_CONNECTION; i++) {
                 connections.put(DriverManager.getConnection(URL, USER, PASSWORD));

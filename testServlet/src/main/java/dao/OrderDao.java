@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface OrderDao {
     Order getOrderFromResulSet(ResultSet resultSet) throws SQLException;
-    Order findOrderById(int id);
+    Order getOrderById(int id);
     boolean removeOrder(int id);
     List<Order> getListOrder();
     List<Order> getOrdersByUserId(int user_id);
-    boolean createOrder(Order order);
+    boolean addOrder(Order order);
 
     boolean editOrder(Order order);
 }

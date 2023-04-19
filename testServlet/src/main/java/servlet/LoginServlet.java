@@ -33,26 +33,6 @@ public class LoginServlet extends HttpServlet {
             User user = UserService.findUserByEmail(email);
             String hashPassword = UserService.hasPassword(password);
             if (user != null && user.getHash().equals(hashPassword)) {
-//                AuthAPI auth = new AuthAPI("dev-3jh7bscjgsdbuvxn.us.auth0.com", "jlob9DKeeus1Bw0Z6BTTkcYdFUCm8JDM", "005EH-3xAYKjXaGADLJx6bUqUH8-FsujoLgt56TRtRakPIJQoLRlVsUh8178bX4I");
-//                try{
-//                    TokenHolder holder = auth.login(user.getEmail(), user.getPassword())
-//                            .execute();
-//                    String access = holder.getAccessToken();
-//                    Algorithm algorithm = Algorithm.HMAC256("your-secret");
-//                    String token = JWT.create()
-//                            .withIssuer("auth0")
-//                            .withSubject(email)
-//                            .withExpiresAt(new Date(System.currentTimeMillis() + 86400000))
-//                            .withArrayClaim("roles", new String[] {"user"})
-//                            .sign(algorithm);
-//                    response.setContentType("application/json");
-//                    response.setCharacterEncoding("UTF-8");
-//                    JSONObject json = new JSONObject();
-//                    json.put("accessToken", token);
-//                    response.getWriter().write(json.toString());
-//                }catch (APIException e){
-//                    logger.error(e);
-//                }
                 //create token
                 String access = TokenManager.generateAccessToken(user.getId(), String.valueOf(user.getRole()));
                 String refresh = TokenManager.generateRefreshToken(user.getId(), String.valueOf(user.getRole()));

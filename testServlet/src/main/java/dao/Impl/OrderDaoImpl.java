@@ -21,7 +21,7 @@ public class OrderDaoImpl implements OrderDao {
             "UPDATE orders SET user_id = ?, book_id = ?, date_order = ?, status = ?::status_order, type = ?::ticket_type WHERE id = ?";
     private static final String GET_ALL_ORDER_QUERY =
             "SELECT orders.id, user_id, book_id, date_order, status, type FROM orders";
-    private static final String CREATE_ORDER_QUERY =
+    private static final String ADD_ORDER_QUERY =
             "INSERT INTO orders(user_id, book_id, date_order, type) VALUES(?, ?, ?, ?::ticket_type)";
     private static final String GET_ORDER_BY_ID_QUERY =
             "SELECT orders.id, user_id, book_id, date_order, status, type FROM orders WHERE orders.id = ?";
@@ -39,13 +39,13 @@ public class OrderDaoImpl implements OrderDao {
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0) {
-                log.error("can't delete order : " + id);
+                log.error("failRemoveOrder : " + id);
                 return false;
             } else {
                 return true;
             }
         } catch (SQLException | InterruptedException e) {
-            log.error("deleteOrder : " + e);
+            log.error("removeOrder : " + e);
             return false;
         }
     }
@@ -73,7 +73,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Order findOrderById(int id) {
+    public Order getOrderById(int id) {
         if (id == -1) {
             log.error("Error findByOrder");
             return null;
@@ -115,7 +115,7 @@ public class OrderDaoImpl implements OrderDao {
             connectionPool.releaseConnection(connection);
 
             if (affectedRows <= 0) {
-                log.error("can't update order");
+                log.error("failUpdateOrder");
                 return false;
             } else {
                 return true;
@@ -127,7 +127,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public boolean createOrder(Order order) {
+    public boolean addOrder(Order order) {
         if (order == null) {
             log.error("Error create order");
             return false;
@@ -135,7 +135,7 @@ public class OrderDaoImpl implements OrderDao {
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
         try (Connection connection = connectionPool.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_ORDER_QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_ORDER_QUERY);
             preparedStatement.setInt(1, order.getUser_id());
             preparedStatement.setInt(2, order.getBook_id());
             preparedStatement.setDate(3, (java.sql.Date) order.getDate_order());
@@ -144,14 +144,14 @@ public class OrderDaoImpl implements OrderDao {
             connectionPool.releaseConnection(connection);
 
             if (affectedRows <= 0) {
-                log.error("can't create order");
+                log.error("failAddOrder");
                 return false;
             } else {
                 return true;
             }
 
         } catch (SQLException | InterruptedException e) {
-            log.error("CreateOrder: " + e);
+            log.error("addOrder: " + e);
             return false;
         }
     }

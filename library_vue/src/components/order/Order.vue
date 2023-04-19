@@ -44,7 +44,7 @@ export default {
     getBookName,
     async getUserOrder() {
       try {
-        const response = await sendRequest("/user/order", "GET", null, localStorage.getItem('AccessToken'));
+        const response = await sendRequest("/user/order", "GET", null);
         if (response.ok) {
           const data = await response.json();
           this.orders = data;
@@ -60,7 +60,7 @@ export default {
     },
     async getBooks() {
       try {
-        const response = await sendRequest("/book", "GET", null, localStorage.getItem("AccessToken"));
+        const response = await sendRequest("/book", "GET", null);
         if (response.ok) {
           const data = await response.json();
           this.books = data['books'];

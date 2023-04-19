@@ -2,7 +2,6 @@ package servlet;
 
 import org.apache.log4j.Logger;
 import utils.JsonUtils;
-import utils.TokenManager;
 import entity.Order;
 import entity.User;
 import jakarta.servlet.ServletException;
@@ -26,14 +25,13 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String pathInfo = request.getPathInfo();
-        //get header
-        JSONObject param = (JSONObject) request.getAttribute("params");
-//        JSONObject param = TokenManager.verifyAuthorization(request);
-        if (param != null) {
+        //get params from token
+        JSONObject params = (JSONObject) request.getAttribute("params");
+        if (params != null) {
             //parse path and check role
             if (pathInfo == null || pathInfo.equals("/")) {
                 //get all users
-                if (param.getString("role").equals("ADMIN")) {
+                if (params.getString("role").equals("ADMIN")) {
                     PrintWriter out = response.getWriter();
                     response.setContentType("application/JSON");
                     List<User> users = UserService.getListUsers();
@@ -45,8 +43,8 @@ public class UserServlet extends HttpServlet {
             } else {
                 String pathParam = pathInfo.substring(1);
                 if (pathParam.equals("info")) {
-                    //get user
-                    User user = UserService.findUserById(param.getInt("id"));
+                    //get user info
+                    User user = UserService.findUserById(params.getInt("id"));
                     if (user == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
                         return;
@@ -56,7 +54,8 @@ public class UserServlet extends HttpServlet {
                     out.println(JsonUtils.getJsonString(user));
                 }
                 if (pathParam.equals("order")) {
-                    List<Order> userOrders = OrderService.getOrdersByUserId(param.getInt("id"));
+                    //get user order
+                    List<Order> userOrders = OrderService.getOrdersByUserId(params.getInt("id"));
                     if (userOrders == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND);
                         return;
@@ -74,14 +73,15 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws
             ServletException, IOException {
+
         JSONObject jsonObject = JsonUtils.getJson(request);
-        if (!JsonUtils.checkJsonNotEmpty(jsonObject)) {
+        if (!JsonUtils.checkJsonForEmptyKeys(jsonObject)) {
             request.setAttribute("errorMessage", "Invalid param");
             response.getWriter().write("Error Params!");
             log.info("doPost Error Params");
             return;
         }
-        User user = JsonUtils.parsUserJsonNotId(jsonObject);
+        User user = JsonUtils.parseUserJson(jsonObject);
         if (user == null) {
             request.setAttribute("errorMessage", "Invalid param");
             response.getWriter().write("Error registration ");
@@ -103,7 +103,7 @@ public class UserServlet extends HttpServlet {
 
         if (param != null) {
             JSONObject jsonObject = JsonUtils.getJson(request);
-            User user = JsonUtils.parsUserJsonNotId(jsonObject);
+            User user = JsonUtils.parseUserJson(jsonObject);
 
             user.setId(param.getInt("id"));
             if (UserService.editUser(user)) {
@@ -124,14 +124,8 @@ public class UserServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws
             ServletException, IOException {
         JSONObject params = (JSONObject) request.getAttribute("params");
-//        JSONObject jsonObject = JsonUtils.getJson(request);
-        if (params != null && params.getString("role").equals("ADMIN")) {
-//            if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
-//                request.setAttribute("errorMessage", "Invalid param");
-//                response.getWriter().write("Error Params!");
-//                return;
-//            }
-//            int id = jsonObject.getInt("id");
+
+        if (params != null ) {
             if (UserService.removeUser(params.getInt("id"))) {
                 response.getWriter().write("Success Delete!");
                 log.info("Success Delete");

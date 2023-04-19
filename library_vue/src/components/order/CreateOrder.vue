@@ -1,14 +1,14 @@
 <template>
   <div v-if="isHaveBook">
-    <form>
+    <form @submit.prevent="addOrder">
       <div class="row ">
         <div class="col-6">
-        <select name="type" id="typeTicket" class="form-select form-select-sm " v-model="order.type" required>
-          <option value="ROOM" selected>Зала</option>
-          <option value="SUBSCRIPTION">Абонемент</option>
-        </select>
+          <select name="type" id="typeTicket" class="form-select form-select-sm " v-model="order.type" required>
+            <option value="ROOM" selected>Зала</option>
+            <option value="SUBSCRIPTION">Абонемент</option>
+          </select>
         </div>
-        <button @click="addOrder" class="btn btn-dark btn-sm col-4">Замовити</button>
+        <button type="submit" class="btn btn-dark btn-sm col-4">Замовити</button>
       </div>
     </form>
   </div>
@@ -34,15 +34,17 @@ export default {
     async addOrder(event) {
       event.preventDefault();
       console.log(this.order);
-      const response = await sendRequest('/order', 'POST', this.order, localStorage.getItem('AccessToken'));
+      const response = await sendRequest('/order', 'POST', this.order);
       if (response.ok) {
         this.$Notiflix.Notify.success("Успішно!")
         this.$router.push('/orders');
       } else {
         if (response.status === 401) {
           this.$router.push('/login')
+          this.$Notiflix.Notify.info("Виконайте вхід!")
+        } else {
+          this.$Notiflix.Notify.failure("Виникла помилка!")
         }
-        this.$Notiflix.Notify.failure("Виникла помилка")
       }
     }
   }

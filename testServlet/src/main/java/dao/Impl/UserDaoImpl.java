@@ -20,10 +20,10 @@ public class UserDaoImpl implements UserDao {
             "INSERT INTO users(username, password, email, hash, surname, address) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_ALL_USERS_QUERY =
             "SELECT users.id, username, email, surname, address FROM users";
-    private static final String CHECK_USER_BY_EMAIL_QUERY =
+    private static final String GET_USER_BY_EMAIL_QUERY =
             "SELECT users.id, username, password, email, role, hash, surname, address FROM users WHERE email = ?";
-    private static final String CHECK_USER_BY_ID_QUERY =
-            "SELECT users.id, username, password, email, role, hash, surname, address FROM users WHERE users.id = ?";
+    private static final String GET_USER_BY_ID_QUERY =
+            "SELECT users.id, username, password, email, role, surname, address FROM users WHERE users.id = ?";
     private static final String UPDATE_USER_QUERY =
             "UPDATE users SET username = ?, password = ?, email = ?, hash = ?, surname = ?, address = ? WHERE id = ?";
     private static final String DELETE_USER_QUERY =
@@ -38,7 +38,7 @@ public class UserDaoImpl implements UserDao {
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0) {
-                log.error("can't delete user : " + id);
+                log.error("failRemoveUser " + id);
                 return false;
             }else {
                 return true;
@@ -60,14 +60,13 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getEmail());
-//            preparedStatement.setString(4, String.valueOf(user.getRole()).toUpperCase());
             preparedStatement.setString(4, user.getHash());
             preparedStatement.setString(5, user.getSurname());
             preparedStatement.setString(6, user.getAddress());
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0){
-                log.error("can't register user");
+                log.error("failRegisterUser");
                 return false;
             }else {
                 return true;
@@ -96,7 +95,7 @@ public class UserDaoImpl implements UserDao {
             connectionPool.releaseConnection(connection);
 
             if (affectedRows <= 0){
-                log.error("can't register user");
+                log.error("failUpdateUser");
                 return false;
             }else {
                 return true;
@@ -107,11 +106,11 @@ public class UserDaoImpl implements UserDao {
         }
     }
     @Override
-    public User findUser(String email){
+    public User getUser(String email){
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
         try (Connection connection = connectionPool.getConnection()){
-            PreparedStatement preparedStatement = connection.prepareStatement(CHECK_USER_BY_EMAIL_QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_EMAIL_QUERY);
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
@@ -120,25 +119,32 @@ public class UserDaoImpl implements UserDao {
             }
 
         }catch (SQLException | InterruptedException e){
-            log.error("fU : " + e);
+            log.error("getUser : " + e);
             return null;
         }
         return null;
     }
     @Override
-    public User findUser(int id){
+    public User getUser(int id){
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
         try (Connection connection = connectionPool.getConnection()){
-            PreparedStatement preparedStatement = connection.prepareStatement(CHECK_USER_BY_ID_QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_ID_QUERY);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
             if (resultSet.next()){
-                return getUserFromResultSet(resultSet);
+                int user_id = resultSet.getInt(1);
+                String username = resultSet.getString(2);
+                String password = resultSet.getString(3);
+                String email = resultSet.getString(4);
+                UserRole role = UserRole.valueOf(resultSet.getString(5));
+                String surname = resultSet.getString(6);
+                String address = resultSet.getString(7);
+                return new User(user_id, username, password, email, role, surname, address);
             }
 
         }catch (SQLException | InterruptedException e){
-            log.error("fU : " + e);
+            log.error("getUser : " + e);
             return null;
         }
         return null;

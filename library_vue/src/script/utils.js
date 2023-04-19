@@ -12,7 +12,6 @@ export function getUsername(userId, users) {
     const user = users.find(user => user.id === userId)
     return user ? user : 'невідомий клієнт'
 }
-// export
 
 export function getDateForRequest(time) {
     const date = new Date(time);
@@ -40,7 +39,4 @@ export function formatType(type){
         default:
             return 'unknown';
     }
-}
-export function checkToken(){
-    return  !!localStorage.getItem("AccessToken");
 }

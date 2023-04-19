@@ -1,9 +1,10 @@
 const BASE_URL = 'http://localhost:8080/testServlet_war';
 
-export async function sendRequest(url, method, data, token) {
+export async function sendRequest(url, method, data) {
     console.log(method + " " + url)
     let headers = ""
-    if (token) headers = "Bearer " + token;
+    let accessToken = localStorage.getItem("AccessToken")
+    if (accessToken) headers = "Bearer " + accessToken;
     const request = {
         method: method,
         headers: {
@@ -24,11 +25,14 @@ export async function sendRequest(url, method, data, token) {
             }
         });
         if (responseTokens.status !== 401) {
-            const newTokens = await responseTokens.json();
-            localStorage.setItem('AccessToken', newTokens['AccessToken']);
-            localStorage.setItem('RefreshToken', newTokens['RefreshToken']);
-
-            return await sendRequest(url, method, data, newTokens['AccessToken']);
+            if (responseTokens.ok) {
+                const newTokens = await responseTokens.json();
+                localStorage.setItem('AccessToken', newTokens['AccessToken']);
+                localStorage.setItem('RefreshToken', newTokens['RefreshToken']);
+                return await sendRequest(url, method, data);
+            } else {
+                return responseTokens;
+            }
         } else {
             return responseTokens;
         }

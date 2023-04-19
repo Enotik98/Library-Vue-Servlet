@@ -2,7 +2,6 @@ package servlet;
 
 import org.apache.log4j.Logger;
 import utils.JsonUtils;
-import utils.TokenManager;
 import entity.Order;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,15 +23,14 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
-        //get header and verify accessToken
-//        JSONObject param = TokenManager.verifyAuthorization(request);
-        JSONObject param = (JSONObject) request.getAttribute("params");
+        //get params from token
+        JSONObject params = (JSONObject) request.getAttribute("params");
 
-        if (param != null) {
+        if (params != null) {
             //get param in token
             if (pathInfo == null || pathInfo.equals("/")) {
                 //get all orders
-                if (param.getString("role").equals("ADMIN")) {
+                if (params.getString("role").equals("ADMIN")) {
                     PrintWriter out = response.getWriter();
                     response.setContentType("application/json");
                     List<Order> orders = OrderService.getListOrders();
@@ -41,6 +39,7 @@ public class OrderServlet extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 }
             } else {
+
                 int id = Integer.parseInt(pathInfo.substring(1));
                 Order order = OrderService.findOrderById(id);
                 if (order == null) {
@@ -62,9 +61,8 @@ public class OrderServlet extends HttpServlet {
         JSONObject param = (JSONObject) request.getAttribute("params");
 
         if (param != null) {
-            System.out.println("Order OK");
             JSONObject jsonOrder = JsonUtils.getJson(request);
-            Order order = JsonUtils.parseOrderJsonNotId(jsonOrder);
+            Order order = JsonUtils.parseOrderJsonForUpdate(jsonOrder);
             order.setUser_id(param.getInt("id"));
             order.setDate_order(new Date(System.currentTimeMillis()));
             if (OrderService.createOrder(order)) {
@@ -88,7 +86,7 @@ public class OrderServlet extends HttpServlet {
         JSONObject params = (JSONObject) request.getAttribute("params");
         if (params != null) {
             if ((pathInfo != null || !pathInfo.equals("/")) && params.getString("role").equals("ADMIN")) {
-                Order order = JsonUtils.parseOrderJsonNotIdWithStatus(jsonObject);
+                Order order = JsonUtils.parseOrderJson(jsonObject);
                 int id = Integer.parseInt(pathInfo.substring(1));
                 order.setId(id);
                 if (OrderService.editOrder(order)) {
@@ -109,7 +107,7 @@ public class OrderServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JSONObject jsonObject = JsonUtils.getJson(request);
         JSONObject params = (JSONObject) request.getAttribute("params");
-        if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
+        if (!JsonUtils.checkJsonForEmptyKeys(jsonObject) || !JsonUtils.isIntValueKey(jsonObject, "id")) {
             request.setAttribute("errorMessage", "Invalid param");
             response.getWriter().write("Error Params!");
             log.info("Error Params");
@@ -123,7 +121,6 @@ public class OrderServlet extends HttpServlet {
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 log.info("Fail Delete");
-
             }
         }else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

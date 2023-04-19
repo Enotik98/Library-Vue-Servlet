@@ -1,5 +1,5 @@
 <template>
-  <div class="my-1">
+  <div>
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
        Видалити
@@ -55,13 +55,14 @@ export default {
     async deleteObject(){
       this.order.id = this.removeId
       console.log(this.order)
-      const response = await sendRequest(this.urlPath, 'DELETE', this.order, localStorage.getItem('AccessToken'));
+      const response = await sendRequest(this.urlPath, 'DELETE', this.order);
       if (response.ok){
         if (this.urlPath === '/user'){
           localStorage.clear();
         }
+        this.$Notiflix.Notify.info("Успішно видалено!")
         console.log("Delete Ok" + response)
-        this.$router.push('/books')
+        this.$router.go(-1)
       }else {
         console.log('fail delete')
       }

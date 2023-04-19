@@ -2,7 +2,6 @@ package servlet;
 
 import org.apache.log4j.Logger;
 import utils.JsonUtils;
-import utils.TokenManager;
 import entity.Book;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,16 +22,9 @@ public class BookServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
-//        JSONObject params = TokenManager.verifyAuthorization(request);
-        JSONObject params = (JSONObject) request.getAttribute("params");
         PrintWriter out = response.getWriter();
         response.setContentType("application/JSON");
         JSONObject jsonObject = new JSONObject();
-        if (params != null) {
-            jsonObject.put("button", params.getString("role").equals("ADMIN"));
-        }else {
-            jsonObject.put("button", false);
-        }
         if (pathInfo == null || pathInfo.equals("/")) {
             List<Book> books = BookService.getListBook();
             JSONArray array = new JSONArray(JsonUtils.getJsonString(books));
@@ -47,7 +39,6 @@ public class BookServlet extends HttpServlet {
             int count = BookService.countTakenBook(id);
             jsonObject = new JSONObject(JsonUtils.getJsonString(book));
             jsonObject.put("count", count);
-//            jsonObject.put("button", params.getString("role").equals("ADMIN"));
         }
         out.println(jsonObject.toString());
     }
@@ -55,11 +46,19 @@ public class BookServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String pathInfo = request.getPathInfo();
-        JSONObject jsonObject = JsonUtils.getJson(request);
-        Book book = JsonUtils.parseBookJsonNotId(jsonObject);
         JSONObject params = (JSONObject) request.getAttribute("params");
-        if ((pathInfo == null || pathInfo.equals("/")) && params.getString("role").equals("ADMIN")) {
-            //create
+
+        JSONObject jsonObject = JsonUtils.getJson(request);
+        if (!JsonUtils.checkJsonForEmptyKeys(jsonObject)){
+            request.setAttribute("errorMessage", "Invalid param");
+            response.getWriter().write("Error Params!");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            log.info("Error Params");
+            return;
+        }
+
+        Book book = JsonUtils.parseBookJson(jsonObject);
+        if (params != null && (pathInfo == null || pathInfo.equals("/")) && params.getString("role").equals("ADMIN")) {
             if (BookService.addBook(book)) {
                 response.getWriter().write("Success Create!");
                 log.info("Success Create");
@@ -68,6 +67,8 @@ public class BookServlet extends HttpServlet {
                 log.info("Fail Create");
 
             }
+        }else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
@@ -76,7 +77,14 @@ public class BookServlet extends HttpServlet {
         JSONObject params = (JSONObject) request.getAttribute("params");
         if (params != null && params.getString("role").equals("ADMIN")) {
             JSONObject jsonObject = JsonUtils.getJson(request);
-            Book book = JsonUtils.parseBookJsonNotId(jsonObject);
+            if (!JsonUtils.checkJsonForEmptyKeys(jsonObject)){
+                request.setAttribute("errorMessage", "Invalid param");
+                response.getWriter().write("Error Params!");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                log.info("Error Params");
+                return;
+            }
+            Book book = JsonUtils.parseBookJson(jsonObject);
             book.setId(jsonObject.getInt("id"));
             if (BookService.editBook(book)) {
                 response.getWriter().write("Success Update!");
@@ -85,7 +93,6 @@ public class BookServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 log.info("Fail Update");
             }
-
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
@@ -93,10 +100,10 @@ public class BookServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        JSONObject jsonObject = JsonUtils.getJson(request);
         JSONObject params = (JSONObject) request.getAttribute("params");
+        JSONObject jsonObject = JsonUtils.getJson(request);
         if (params.getString("role").equals("ADMIN")) {
-            if (!JsonUtils.checkJsonNotEmpty(jsonObject) || !JsonUtils.checkIntValueKey(jsonObject, "id")) {
+            if (!JsonUtils.checkJsonForEmptyKeys(jsonObject) || !JsonUtils.isIntValueKey(jsonObject, "id")) {
                 request.setAttribute("errorMessage", "Invalid param");
                 response.getWriter().write("Error Params!");
                 log.info("Error Params");

@@ -18,12 +18,10 @@ public class BookDaoImpl implements BookDao {
             "INSERT INTO books(name, author, genre, quantity, year) VALUES(?, ?, ?, ?, ?)";
     private static final String GET_ALL_BOOKS_QUERY =
             "SELECT id, name, author, genre, quantity, year FROM books";
-    private static final String CHECK_BOOK_QUERY =
+    private static final String GET_BOOK_QUERY =
             "SELECT id, name, author, genre, quantity, year FROM books WHERE id = ?";
     private static final String COUNT_BOOK_QUERY =
             "SELECT Count(*) From orders Where book_id = ? AND (status = 'ISSUED' OR status = 'WAITING')";
-    //    private static final String COUNT_BOOK_QUERY =
-//            "SELECT Count(*) From orders Join books On orders.book_id = books.id Where books.name = ? AND orders.status = 'ISSUED'";
     private static final String UPDATE_BOOK_QUERY =
             "UPDATE books SET name = ?, author = ?, genre = ?, quantity = ?, year = ? WHERE id = ?";
     private static final String DELETE_BOOK_QUERY =
@@ -38,7 +36,7 @@ public class BookDaoImpl implements BookDao {
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0) {
-                log.error("can't delete book");
+                log.error("failRemoveBook");
                 return false;
             } else {
                 return true;
@@ -66,7 +64,7 @@ public class BookDaoImpl implements BookDao {
             connectionPool.releaseConnection(connection);
 
             if (affectedRows <= 0) {
-                log.error("can't update book");
+                log.error("failUpdateBook");
                 return false;
             } else {
                 return true;
@@ -115,7 +113,7 @@ public class BookDaoImpl implements BookDao {
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0) {
-                log.error("can't add book");
+                log.error("failAddBook");
                 return false;
             } else {
                 return true;
@@ -127,11 +125,11 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public Book findBookById(int id) {
+    public Book getBook(int id) {
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
         try (Connection connection = connectionPool.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(CHECK_BOOK_QUERY);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BOOK_QUERY);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
@@ -141,7 +139,7 @@ public class BookDaoImpl implements BookDao {
             }
 
         } catch (SQLException | InterruptedException e) {
-            log.error("fb: " + e);
+            log.error("getBook: " + e);
         }
         return null;
     }

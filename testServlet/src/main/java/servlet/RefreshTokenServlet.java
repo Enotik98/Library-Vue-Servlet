@@ -14,14 +14,10 @@ import java.io.IOException;
 public class RefreshTokenServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        JSONObject param = (JSONObject) request.getAttribute("params");
-
-            if (param != null) {
-                System.out.println("id " + param.getInt("id"));
-                System.out.println("role " + param.getString("role"));
-
-                String newAccessToken = TokenManager.generateAccessToken(param.getInt("id"), param.getString("role"));
-                String newRefreshToken = TokenManager.generateRefreshToken(param.getInt("id"), param.getString("role"));
+        JSONObject params = (JSONObject) request.getAttribute("params");
+            if (params != null) {
+                String newAccessToken = TokenManager.generateAccessToken(params.getInt("id"), params.getString("role"));
+                String newRefreshToken = TokenManager.generateRefreshToken(params.getInt("id"), params.getString("role"));
 
                 JSONObject tokens = new JSONObject();
                 tokens.put("AccessToken", newAccessToken);
@@ -30,6 +26,5 @@ public class RefreshTokenServlet extends HttpServlet {
             }else {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             }
-
     }
 }

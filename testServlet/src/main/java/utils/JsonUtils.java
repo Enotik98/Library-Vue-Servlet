@@ -12,8 +12,6 @@ import service.UserService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class JsonUtils {
     public static final Logger log = Logger.getLogger(JsonUtils.class);
@@ -39,11 +37,10 @@ public class JsonUtils {
         return json;
     }
 
-    public static User parsUserJsonNotId(JSONObject json){
+    public static User parseUserJson(JSONObject json){
         String username = json.getString("username");
         String password = json.getString("password");
         String email = json.getString("email");
-//        UserRole role = UserRole.valueOf(json.getString("role").toUpperCase());
         String hash = UserService.hasPassword(password);
         String surname = json.getString("surname");
         String address = json.getString("address");
@@ -51,7 +48,7 @@ public class JsonUtils {
     }
 
 
-    public static Book parseBookJsonNotId(JSONObject json){
+    public static Book parseBookJson(JSONObject json){
         String name = json.getString("name");
         String author = json.getString("author");
         String genre = json.getString("genre");
@@ -61,14 +58,12 @@ public class JsonUtils {
     }
 
 
-    public static Order parseOrderJsonNotId(JSONObject json){
-//        int user_id = json.getInt("user_id");
+    public static Order parseOrderJsonForUpdate(JSONObject json){
         int book_id = json.getInt("book_id");
-//        Date date_order = java.sql.Date.valueOf(json.getString("date_order"));
         TicketType ticketType = TicketType.valueOf(json.getString("type").toUpperCase());
         return new Order(book_id, ticketType);
     }
-    public static Order parseOrderJsonNotIdWithStatus(JSONObject json){
+    public static Order parseOrderJson(JSONObject json){
         int user_id = json.getInt("user_id");
         int book_id = json.getInt("book_id");
         Date date_order = java.sql.Date.valueOf(json.getString("date_order"));
@@ -77,18 +72,19 @@ public class JsonUtils {
         return new Order(user_id, book_id, date_order, statusType, ticketType);
     }
 
-    public static boolean checkJsonNotEmpty(JSONObject json) {
+
+    public static boolean checkJsonForEmptyKeys(JSONObject json) {
         for (String key : json.keySet()) {
             Object value = json.get(key);
             if (value instanceof JSONObject) {
-                if (!checkJsonNotEmpty((JSONObject) value)) {
+                if (!checkJsonForEmptyKeys((JSONObject) value)) {
                     return false;
                 }
             } else if (value instanceof JSONArray) {
                 JSONArray jsonArray = (JSONArray) value;
                 for (int i = 0; i < jsonArray.length(); i++) {
                     if (jsonArray.get(i) instanceof JSONObject) {
-                        if (!checkJsonNotEmpty(jsonArray.getJSONObject(i))) {
+                        if (!checkJsonForEmptyKeys(jsonArray.getJSONObject(i))) {
                             return false;
                         }
                     }
@@ -100,7 +96,8 @@ public class JsonUtils {
         return true;
     }
 
-    public static boolean checkIntValueKey(JSONObject jsonObject, String key){
+
+    public static boolean isIntValueKey(JSONObject jsonObject, String key){
         if (jsonObject.has(key)){
             return jsonObject.optInt(key, Integer.MIN_VALUE) != Integer.MIN_VALUE;
         }

@@ -14,11 +14,11 @@ public class UserService {
 
     public static User findUserByEmail(String email){
         UserDao userDao = new UserDaoImpl();
-        return userDao.findUser(email);
+        return userDao.getUser(email);
     }
     public static User findUserById(int id){
         UserDao userDao = new UserDaoImpl();
-        return userDao.findUser(id);
+        return userDao.getUser(id);
     }
     public static boolean editUser(User user){
         UserDao userDao = new UserDaoImpl();

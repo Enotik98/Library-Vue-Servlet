@@ -30,20 +30,20 @@ public class User {
         this.address = address;
     }
 
-    public User(String username, String password, String email, String hash, String surname, String address) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.hash = hash;
-        this.surname = surname;
-        this.address = address;
-    }
-
-    public User(String username, String password, String email, UserRole role, String hash, String surname, String address) {
+    public User(int id, String username, String password, String email, UserRole role, String surname, String address) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.surname = surname;
+        this.address = address;
+    }
+
+    public User(String username, String password, String email, String hash, String surname, String address) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
         this.hash = hash;
         this.surname = surname;
         this.address = address;

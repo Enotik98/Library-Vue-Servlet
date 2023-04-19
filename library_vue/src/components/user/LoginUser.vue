@@ -1,18 +1,37 @@
 <template>
-  <div class="container d-flex justify-content-center align-items-center mt-5">
-    <form class="border rounded p-4 align-items-center" @submit.prevent="submitForm">
-      <h2 class="mb-4">Login</h2>
-      <div class="form-group">
-        <label>Email:</label>
-        <input type="email" maxlength="30" class="form-control form-control-sm" v-model="formData.email" required>
-      </div>
-      <div class="form-group my-3">
-        <label>Password:</label>
-        <input type="password" maxlength="20" minlength="4" class="form-control form-control-sm" v-model="formData.password" required>
-      </div>
-      <router-link to="/registration">Зареєструватись</router-link>
-      <button type="submit" class="btn btn-dark float-end">Login</button>
-    </form>
+  <div class="container mt-5">
+    <div class="d-flex justify-content-center align-items-center">
+      <form class="border rounded p-4" @submit.prevent="submitForm">
+        <div class="d-flex justify-content-center">
+          <img src="../../assets/user.png" class="card-img">
+        </div>
+        <h2 class="mb-4 mt-2 d-flex justify-content-center">Вхід</h2>
+        <div class="form-group">
+          <label>E-mail:</label>
+          <input type="email" maxlength="30" class="form-control " v-model="formData.email" placeholder="name@example.com" required>
+        </div>
+        <div class="form-group my-3 ">
+          <label>Пароль:</label>
+          <input type="password" maxlength="20" minlength="4" class="form-control "
+                 v-model="formData.password" placeholder="******" required>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-dark ">
+            Вхід
+            <img src="../../assets/sign-in.png" class="btn-img">
+          </button>
+        </div>
+        <div class="d-flex justify-content-center align-items-center form-landing">
+          <span class="form-decoration">або</span>
+        </div>
+        <div>
+          <router-link class="btn btn-dark " to="/registration">
+            Зареєструватись
+            <img src="../../assets/add-user.png" class="btn-img">
+          </router-link>
+        </div>
+      </form>
+    </div>
   </div>
 
 </template>
@@ -20,6 +39,7 @@
 
 
 import {mapMutations} from "vuex";
+import {sendRequest} from "@/script/request";
 
 export default {
   name: "LoginUser",
@@ -34,18 +54,9 @@ export default {
   methods: {
     async submitForm() {
       try {
+        const response = await sendRequest('/login', 'POST', this.formData)
 
-        const response = await fetch('http://localhost:8080/testServlet_war/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(this.formData)
-        });
-
-        // console.log(response)
-        // console.log(response.json())
-        if (response.status === 401){
+        if (response.status === 401) {
           const data = await response.json();
           this.$Notiflix.Notify.failure(data["error"])
         }
@@ -53,6 +64,7 @@ export default {
           const data = await response.json();
           localStorage.setItem('AccessToken', data['AccessToken']);
           localStorage.setItem('RefreshToken', data['RefreshToken']);
+
           //check localStorage for Header.vue
           this.login()
 
@@ -69,6 +81,30 @@ export default {
 <style scoped>
 
 form {
-  width: 400px;
+  width: 420px;
+}
+.form-landing:after,
+.form-landing:before{
+  content: "";
+  width: 100%;
+  height: 2px;
+  background-color: #cfd1d3;
+}
+.form-decoration{
+  position: relative;
+  padding: 8px;
+}
+.card-img {
+  width: 30%;
+  object-fit: cover;
+  border-radius: 0;
+}
+.btn-img{
+  width: 17px;
+  object-fit: cover;
+  border-radius: 0;
+}
+.btn{
+  width: 100%;
 }
 </style>

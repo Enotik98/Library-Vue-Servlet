@@ -1,7 +1,12 @@
 <template>
   <div class="container d-flex justify-content-center align-items-center mt-5">
     <div>
+    <div class="d-flex justify-content-between">
+      <a @click="$router.go(-1)" role="button">
+        <img src="../../assets/left-arrow.png" class="btn-img">
+      </a>
       <h2>Інформація про замовлення</h2>
+    </div>
       <div class="card rounded mb-4">
         <div class="row">
           <span class="col-6">Номер замовлення:</span>
@@ -53,7 +58,7 @@
           <ConfirmationWindow :removeId="order.id" urlPath="/order"/>
         </div>
       </div>
-      <h2 >Замовник:</h2>
+      <h2 class="d-flex justify-content-center">Замовник:</h2>
       <div class="card rounded">
         <div class="row">
           <div class="col-6">Ім'я</div>
@@ -93,7 +98,6 @@ export default {
       book: {},
       user: {},
       userData: JSON.parse(this.$route.query.userData)
-      // orderUser: this.$route.query.username,
     }
   },
   mounted() {
@@ -108,8 +112,7 @@ export default {
     formatDate,
 
     async getOrder() {
-      // console.log(JSON.parse(this.userData))
-      const response = await sendRequest('/order/' + this.$route.params.id, 'GET', null, localStorage.getItem('AccessToken'))
+      const response = await sendRequest('/order/' + this.$route.params.id, 'GET', null)
       if (response.ok) {
         const data = await response.json();
         this.order = data;
@@ -118,7 +121,7 @@ export default {
       }
     },
     async getBook() {
-      const response = await sendRequest('/book/' + this.order.book_id, 'GET', null, localStorage.getItem('AccessToken'));
+      const response = await sendRequest('/book/' + this.order.book_id, 'GET', null);
       if (response.ok) {
         const data = await response.json()
         this.book = data;
@@ -126,7 +129,7 @@ export default {
     },
     async updateOrder() {
       this.editedOrder.date_order = getDateForRequest(this.editedOrder.date_order);
-      const response = await sendRequest('/order/' + this.order.id, 'PUT', this.editedOrder, localStorage.getItem('AccessToken'))
+      const response = await sendRequest('/order/' + this.order.id, 'PUT', this.editedOrder)
       if (response.ok) {
         this.$router.push('/orders')
         this.$Notiflix.Notify.success("Успішно!")
@@ -141,10 +144,13 @@ export default {
 <style scoped>
 .card {
   width: 450px;
-  /*height: 200px;*/
   border: none;
   padding: 20px;
   border-radius: 0;
   box-shadow: 0px 1px 4px 4px rgba(0, 0, 0, 0.2);
+}
+.btn-img{
+  width: 38px;
+  border-radius: 0;
 }
 </style>

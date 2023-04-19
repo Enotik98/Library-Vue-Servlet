@@ -17,7 +17,7 @@ public class OrderService {
     }
     public static boolean createOrder(Order order){
         OrderDao orderDao = new OrderDaoImpl();
-        return orderDao.createOrder(order);
+        return orderDao.addOrder(order);
     }
     public static boolean editOrder(Order order){
         OrderDao orderDao = new OrderDaoImpl();
@@ -25,7 +25,7 @@ public class OrderService {
     }
     public static Order findOrderById(int id){
         OrderDao orderDao = new OrderDaoImpl();
-        return orderDao.findOrderById(id);
+        return orderDao.getOrderById(id);
     }
     public static boolean deleteOrder(int id){
         OrderDao orderDao = new OrderDaoImpl();

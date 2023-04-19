@@ -17,7 +17,6 @@
         </tr>
         </thead>
         <tbody>
-
         <tr v-for="order in orders" :key="order.id">
           <td>{{ order.id }}</td>
           <td>{{ getUsername(order.user_id, users).username }}</td>
@@ -33,8 +32,6 @@
         </tr>
         </tbody>
       </table>
-      <!--      <div>-->
-
     </div>
   </div>
 </template>
@@ -53,7 +50,6 @@ export default {
       books: [],
       users: [],
       isAdmin: false,
-      showConfirmModal: true
     }
   },
   mounted() {
@@ -67,7 +63,7 @@ export default {
     formatDate,
     async getOrders() {
       try {
-        const response = await sendRequest('/order', 'GET', null, localStorage.getItem('AccessToken'));
+        const response = await sendRequest('/order', 'GET', null);
         if (response.ok) {
           const data = await response.json();
           this.orders = data;
@@ -80,7 +76,7 @@ export default {
       }
     },
     async getBooks() {
-      const response = await sendRequest('/book', 'GET', null, localStorage.getItem('AccessToken'));
+      const response = await sendRequest('/book', 'GET', null);
       if (response.ok) {
         const data = await response.json();
         this.books = data['books'];
@@ -88,7 +84,7 @@ export default {
 
     },
     async getUsers() {
-      const response = await sendRequest('/user', 'GET', null, localStorage.getItem('AccessToken'));
+      const response = await sendRequest('/user', 'GET', null);
       if (response.ok) {
         const data = await response.json();
         this.users = data;

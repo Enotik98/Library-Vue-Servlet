@@ -1,7 +1,6 @@
 package dao;
 
 import entity.User;
-import service.UserService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +11,7 @@ public interface UserDao {
     boolean registerUser(User user);
     boolean editUser(User user);
     User getUserFromResultSet(ResultSet resultSet) throws SQLException;
-    User findUser(String email);
-    User findUser(int id );
+    User getUser(String email);
+    User getUser(int id );
     boolean removeUser(int id );
 }

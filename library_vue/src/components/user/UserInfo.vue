@@ -1,8 +1,8 @@
 <template>
-  <div class="container d-flex justify-content-center align-items-center mt-5 position-relative min-vw-100">
+  <div class="container d-flex justify-content-center align-items-center mt-5 position-relative ">
     <div class="position-relative">
-      <h2>Інформація про користувача</h2>
-      <div class="user-card rounded">
+      <h2 class="d-flex justify-content-center">Інформація про користувача</h2>
+      <form  class="user-card rounded" @submit.prevent="updateUser">
         <div class="row">
           <label class="col-6">Ім'я:</label>
           <div v-if="!showUpdateForm" class="col-6">{{ user.username }}</div>
@@ -43,10 +43,10 @@
         </div>
         <div class="row offset-7 mt-3 ">
           <button v-if="!showUpdateForm" @click="changeStatus" class="btn btn-dark btn-sm">Редагувати</button>
-          <button v-else @click="updateUser" class="btn btn-outline-dark btn-sm col-6 me-1">Зберегти</button>
+          <button v-else type="submit" class="btn btn-outline-dark btn-sm col-6 me-1">Зберегти</button>
           <button v-if="showUpdateForm" @click="changeStatus" class="btn btn-dark btn-sm col-5">Відміна</button>
         </div>
-      </div>
+      </form>
       <div class="my-5 position-relative">
         <OrderCard/>
       </div>
@@ -87,16 +87,18 @@ export default {
   methods: {
     changeStatus() {
       this.showUpdateForm = !this.showUpdateForm;
+      this.editedUser = Object.assign({}, this.user);
     },
     async getUser() {
       try {
-        const accessToken = localStorage.getItem('AccessToken');
-        const response = await sendRequest("/user/info", "GET", null, accessToken);
+        const response = await sendRequest("/user/info", "GET", null);
         if (response.ok) {
           const data = await response.json();
           this.user = data;
-          this.editedUser = Object.assign({}, data);
           this.setClient(this.user["role"])
+          //_
+          const error = await response.text();
+          console.log(error)
         } else {
           this.$router.push('/login')
         }
@@ -106,11 +108,8 @@ export default {
     },
     ...mapMutations(['setClient']),
     async updateUser() {
-      // event.preventDefault();
       try {
-        const accessToken = localStorage.getItem('AccessToken');
-        const response = await sendRequest("/user", 'PUT', this.editedUser, accessToken);
-
+        const response = await sendRequest("/user", 'PUT', this.editedUser);
         if (response.ok) {
           await this.getUser();
           this.changeStatus();
@@ -132,7 +131,6 @@ export default {
 
 .user-card {
   width: 450px;
-  /*height: 200px;*/
   border: none;
   padding: 20px;
   border-radius: 0;

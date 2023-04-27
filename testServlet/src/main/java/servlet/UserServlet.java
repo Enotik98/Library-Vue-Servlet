@@ -75,12 +75,6 @@ public class UserServlet extends HttpServlet {
             ServletException, IOException {
 
         JSONObject jsonObject = JsonUtils.getJson(request);
-        if (!JsonUtils.checkJsonForEmptyKeys(jsonObject)) {
-            request.setAttribute("errorMessage", "Invalid param");
-            response.getWriter().write("Error Params!");
-            log.info("doPost Error Params");
-            return;
-        }
         User user = JsonUtils.parseUserJson(jsonObject);
         if (user == null) {
             request.setAttribute("errorMessage", "Invalid param");

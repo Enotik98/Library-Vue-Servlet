@@ -60,7 +60,8 @@ export default {
         address: '',
         password: '',
         email: '',
-        role: 'CLIENT'
+        role: 'CLIENT',
+        type_auth: 'local'
       }
     }
   },

@@ -12,9 +12,9 @@ import java.util.List;
 
 public class UserService {
 
-    public static User findUserByEmail(String email){
+    public static User findUserByEmail(String email, String type_auth){
         UserDao userDao = new UserDaoImpl();
-        return userDao.getUser(email);
+        return userDao.getUserByEmail(email, type_auth);
     }
     public static User findUserById(int id){
         UserDao userDao = new UserDaoImpl();
@@ -40,8 +40,7 @@ public class UserService {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashedByte = digest.digest(password.getBytes("UTF-8"));
-            String hashedPassword = Base64.getEncoder().encodeToString(hashedByte);
-            return hashedPassword;
+            return Base64.getEncoder().encodeToString(hashedByte);
         }catch (Exception e){
             System.out.println("hash :" + e);
             return null;

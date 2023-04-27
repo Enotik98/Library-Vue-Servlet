@@ -1,5 +1,8 @@
 import {createApp} from 'vue/dist/vue.esm-bundler.js';
 import {createWebHistory, createRouter} from "vue-router";
+import {createAuth0} from '@auth0/auth0-vue'
+
+
 import Login from "@/components/user/LoginUser.vue";
 import UserInfo from "@/components/user/UserInfo.vue";
 import RegistrationUser from "@/components/user/RegistrationUser.vue";
@@ -15,6 +18,8 @@ import "bootstrap";
 import 'jquery/dist/jquery.js'
 import Notiflix from 'notiflix'
 import store from "@/script/store";
+import Callback from "@/components/Callback.vue";
+import RegistrationAuth0 from "@/components/RegistrationAuth0.vue";
 
 
 const routes = [
@@ -34,7 +39,7 @@ const routes = [
         component: UserInfo
     },
     {
-        path:'/login',
+        path: '/login',
         name: "LoginUser",
         component: Login
     },
@@ -57,6 +62,16 @@ const routes = [
         path: '/add-book',
         name: 'AddBook',
         component: CreateBook
+    },
+    {
+        path: '/callback',
+        name: "CallBack",
+        component: Callback
+    },
+    {
+        path: '/registration-auth0',
+        name: "RegistrationAuth0",
+        component: RegistrationAuth0
     }
 ];
 
@@ -67,5 +82,18 @@ const router = createRouter({
 const app = createApp(App)
 app.use(router)
 app.use(store);
+app.use(
+    createAuth0({
+        domain: "dev-3jh7bscjgsdbuvxn.us.auth0.com",
+        clientId: "jlob9DKeeus1Bw0Z6BTTkcYdFUCm8JDM",
+        // clientId: "bYU6GyFjlhuNHkhol97Z9BA1E2ZMQ5Jl",
+        authorizationParams: {
+            audience: "http://localhost:8081",
+            redirect_uri: "http://localhost:8081/callback"
+            // redirect_uri: window.location.origin
+        },
+    })
+);
+
 app.config.globalProperties.$Notiflix = Notiflix;
 app.mount('#app')

@@ -1,9 +1,10 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5">
     <div class="container-fluid">
-        <router-link class="navbar-brand" to="/">
-          <img src="../assets/book.png" alt="library" class="img me-2">
-          Library</router-link>
+      <router-link class="navbar-brand" to="/">
+        <img src="../assets/book.png" alt="library" class="img me-2">
+        Library
+      </router-link>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
               aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -34,7 +35,7 @@
               Замовлення
             </router-link>
           </li>
-          <li class="nav-item" v-if="isLoggedIn">
+          <li class="nav-item">
             <router-link class="nav-link d-flex align-items-center" to="/profile">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                    class="bi bi-person-circle me-1" viewBox="0 0 16 16">
@@ -47,7 +48,7 @@
           </li>
           <li class="nav-item ">
             <router-link class="nav-link d-flex align-items-center" to="/login" v-if="isLoggedIn"
-                         @click.prevent="logout">
+                         @click.prevent="log_out">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                    class="bi bi-box-arrow-in-right me-1" viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -57,7 +58,7 @@
               </svg>
               Вихід
             </router-link>
-            <router-link class="nav-link d-flex align-items-center" to="/login" v-else>
+            <router-link class="nav-link d-flex align-items-center" to="/login" v-else @click.prevent="log_out">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                    class="bi bi-box-arrow-in-right me-1" viewBox="0 0 16 16">
                 <path fill-rule="evenodd"
@@ -86,6 +87,11 @@ export default {
     ...mapState(['isLoggedIn'])
   },
   methods: {
+    log_out() {
+      this.logout();
+      this.$auth0.logout({logoutParams: {returnTo: "http://localhost:8081/login"}})
+
+    },
     ...mapMutations(['logout'])
   }
 }
@@ -98,8 +104,4 @@ export default {
   border-radius: 0;
 }
 
-.card-img {
-
-
-}
 </style>

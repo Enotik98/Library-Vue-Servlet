@@ -11,7 +11,7 @@ public interface UserDao {
     boolean registerUser(User user);
     boolean editUser(User user);
     User getUserFromResultSet(ResultSet resultSet) throws SQLException;
-    User getUser(String email);
+    User getUserByEmail(String email, String type_auth);
     User getUser(int id );
     boolean removeUser(int id );
 }

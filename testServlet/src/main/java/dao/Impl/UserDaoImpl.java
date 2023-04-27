@@ -17,15 +17,15 @@ public class UserDaoImpl implements UserDao {
 
     private static final Logger log = Logger.getLogger(UserDaoImpl.class);
     private static final String ADD_USER_QUERY =
-            "INSERT INTO users(username, password, email, hash, surname, address) VALUES (?, ?, ?, ?, ?, ?)";
+            "INSERT INTO users(username, password, email, hash, surname, address, type_auth) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String GET_ALL_USERS_QUERY =
             "SELECT users.id, username, email, surname, address FROM users";
     private static final String GET_USER_BY_EMAIL_QUERY =
-            "SELECT users.id, username, password, email, role, hash, surname, address FROM users WHERE email = ?";
+            "SELECT users.id, username, password, email, role, hash, surname, address FROM users WHERE email = ? AND type_auth = ?";
     private static final String GET_USER_BY_ID_QUERY =
             "SELECT users.id, username, password, email, role, surname, address FROM users WHERE users.id = ?";
     private static final String UPDATE_USER_QUERY =
-            "UPDATE users SET username = ?, password = ?, email = ?, hash = ?, surname = ?, address = ? WHERE id = ?";
+            "UPDATE users SET username = ?, email = ?, surname = ?, address = ? WHERE id = ?";
     private static final String DELETE_USER_QUERY =
             "DELETE FROM users WHERE id = ?";
 
@@ -54,6 +54,7 @@ public class UserDaoImpl implements UserDao {
             log.error("Error register");
             return false;
         }
+        //add type_auth
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
         try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(ADD_USER_QUERY);
@@ -63,6 +64,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(4, user.getHash());
             preparedStatement.setString(5, user.getSurname());
             preparedStatement.setString(6, user.getAddress());
+            preparedStatement.setString(7, user.getType_auth());
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
             if (affectedRows <= 0){
@@ -85,12 +87,10 @@ public class UserDaoImpl implements UserDao {
         try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_QUERY);
             preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, user.getHash());
-            preparedStatement.setString(5, user.getSurname());
-            preparedStatement.setString(6, user.getAddress());
-            preparedStatement.setInt(7, user.getId());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getSurname());
+            preparedStatement.setString(4, user.getAddress());
+            preparedStatement.setInt(5, user.getId());
             int affectedRows = preparedStatement.executeUpdate();
             connectionPool.releaseConnection(connection);
 
@@ -105,13 +105,13 @@ public class UserDaoImpl implements UserDao {
             return false;
         }
     }
-    @Override
-    public User getUser(String email){
+    public User getUserByEmail(String email, String type_auth){
         ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
         try (Connection connection = connectionPool.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_EMAIL_QUERY);
             preparedStatement.setString(1, email);
+            preparedStatement.setString(2, type_auth);
             ResultSet resultSet = preparedStatement.executeQuery();
             connectionPool.releaseConnection(connection);
             if (resultSet.next()){
@@ -184,6 +184,7 @@ public class UserDaoImpl implements UserDao {
         String hash = resultSet.getString(6);
         String surname = resultSet.getString(7);
         String address = resultSet.getString(8);
-        return new User(id, username, password, email, role, hash, surname, address);
+        String type_auth = null;
+        return new User(id, username, password, email, role, hash, surname, address, type_auth);
     }
 }

@@ -21,6 +21,18 @@ public class User {
     private String hash;
     private String surname;
     private String address;
+    private String type_auth;
+
+
+    public User(String username, String password, String email, String hash, String surname, String address, String type_auth) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.hash = hash;
+        this.surname = surname;
+        this.address = address;
+        this.type_auth = type_auth;
+    }
 
     public User(int id, String username, String email, String surname, String address) {
         this.id = id;

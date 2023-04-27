@@ -8,7 +8,8 @@
         <h2 class="mb-4 mt-2 d-flex justify-content-center">Вхід</h2>
         <div class="form-group">
           <label>E-mail:</label>
-          <input type="email" maxlength="30" class="form-control " v-model="formData.email" placeholder="name@example.com" required>
+          <input type="email" maxlength="30" class="form-control " v-model="formData.email"
+                 placeholder="name@example.com" required>
         </div>
         <div class="form-group my-3 ">
           <label>Пароль:</label>
@@ -30,6 +31,13 @@
             <img src="../../assets/add-user.png" class="btn-img">
           </router-link>
         </div>
+        <div class="d-flex justify-content-center align-items-center form-landing my-1">
+          <span class="form-decoration"></span>
+        </div>
+        <div>
+          <button @click="log_in" class="btn btn-outline-dark">Вхід з Auth0</button>
+        </div>
+
       </form>
     </div>
   </div>
@@ -51,7 +59,16 @@ export default {
       },
     }
   },
+
   methods: {
+    log_in(){
+      try {
+        this.$auth0.loginWithRedirect();
+      }catch (e) {
+        console.log("1 + " + e)
+      }
+    },
+
     async submitForm() {
       try {
         const response = await sendRequest('/login', 'POST', this.formData)
@@ -83,28 +100,33 @@ export default {
 form {
   width: 420px;
 }
+
 .form-landing:after,
-.form-landing:before{
+.form-landing:before {
   content: "";
   width: 100%;
   height: 2px;
   background-color: #cfd1d3;
 }
-.form-decoration{
+
+.form-decoration {
   position: relative;
   padding: 8px;
 }
+
 .card-img {
   width: 30%;
   object-fit: cover;
   border-radius: 0;
 }
-.btn-img{
+
+.btn-img {
   width: 17px;
   object-fit: cover;
   border-radius: 0;
 }
-.btn{
+
+.btn {
   width: 100%;
 }
 </style>

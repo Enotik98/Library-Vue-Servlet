@@ -75,6 +75,7 @@ export default {
     },
     async getBooks() {
       try {
+        console.log("1")
         const response = await sendRequest('/book', "GET", null);
         if (response.ok) {
           const data = await response.json();

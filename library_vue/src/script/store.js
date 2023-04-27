@@ -4,7 +4,7 @@ import {sendRequest} from "@/script/request";
 const store = createStore({
     state: {
         isLoggedIn: !!localStorage.getItem("AccessToken"),
-        isClient: true,
+        isClient: true
     },
     mutations: {
         login(state) {

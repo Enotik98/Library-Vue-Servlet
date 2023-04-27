@@ -4,7 +4,9 @@ export async function sendRequest(url, method, data) {
     console.log(method + " " + url)
     let headers = ""
     let accessToken = localStorage.getItem("AccessToken")
+    console.log("token " + accessToken)
     if (accessToken) headers = "Bearer " + accessToken;
+
     const request = {
         method: method,
         headers: {
@@ -15,7 +17,7 @@ export async function sendRequest(url, method, data) {
     if (data) request.body = JSON.stringify(data)
 
     const response = await fetch(BASE_URL + url, request);
-    if (response.status === 401) {
+    if (response.status === 401 && url !=="/login") {
         const refreshToken = localStorage.getItem('RefreshToken');
         const responseTokens = await fetch(BASE_URL + '/refresh-token', {
             method: 'POST',

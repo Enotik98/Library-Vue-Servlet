@@ -23,7 +23,7 @@
           <label class="col-6">Email:</label>
           <div v-if="!showUpdateForm" class="col-6">{{ user.email }}</div>
           <div v-else class="col-6">
-            <input type="email" maxlength="30" class="form-control form-control-sm" v-model="editedUser.email" required>
+            <input type="email" maxlength="30" class="form-control form-control-sm" v-model="editedUser.email" required disabled>
           </div>
         </div>
         <div class="row">
@@ -31,14 +31,6 @@
           <div v-if="!showUpdateForm" class="col-6">{{ user.address }}</div>
           <div v-else class="col-6">
             <input type="text" maxlength="50" class="form-control form-control-sm" v-model="editedUser.address">
-          </div>
-        </div>
-        <div class="row">
-          <label class="col-6">Пароль:</label>
-          <div v-if="!showUpdateForm" class="col-6">*******</div>
-          <div v-else class="col-6">
-            <input type="password" maxlength="20" minlength="6" class="form-control form-control-sm"
-                   v-model="editedUser.password" required>
           </div>
         </div>
         <div class="row offset-7 mt-3 ">
@@ -62,7 +54,7 @@ import {sendRequest} from '@/script/request';
 import order from "../order/Order.vue";
 import OrderCard from "@/components/order/Order.vue";
 import ConfirmationWindow from "@/components/Confirmation.vue";
-import {mapMutations} from "vuex";
+import {mapMutations, mapState} from "vuex";
 
 export default {
   name: "UserInfo",
@@ -78,13 +70,15 @@ export default {
       user: {},
       editedUser: {},
       showModal: false,
-      errorMessage: "Тут повідомлення про помилку"
+      errorMessage: "Тут повідомлення про помилку",
+      user_info: ""
     };
   },
   mounted() {
     this.getUser();
   },
   methods: {
+    ...mapState(['typeAuth']),
     changeStatus() {
       this.showUpdateForm = !this.showUpdateForm;
       this.editedUser = Object.assign({}, this.user);
@@ -96,11 +90,9 @@ export default {
           const data = await response.json();
           this.user = data;
           this.setClient(this.user["role"])
-          //_
-          const error = await response.text();
-          console.log(error)
+
         } else {
-          this.$router.push('/login')
+          // this.$router.push('/login')
         }
       } catch (error) {
         console.log(error);

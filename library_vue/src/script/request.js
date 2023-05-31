@@ -1,10 +1,12 @@
-const BASE_URL = 'http://localhost:8080/testServlet_war';
+// const BASE_URL = 'http://localhost:8080/testServlet_war';
+const BASE_URL = 'http://localhost:8080';
+
 
 export async function sendRequest(url, method, data) {
     console.log(method + " " + url)
     let headers = ""
     let accessToken = localStorage.getItem("AccessToken")
-    console.log("token " + accessToken)
+    // console.log("token " + accessToken)
     if (accessToken) headers = "Bearer " + accessToken;
 
     const request = {

@@ -79,7 +79,8 @@ export default {
       const response = await sendRequest('/book', 'GET', null);
       if (response.ok) {
         const data = await response.json();
-        this.books = data['books'];
+        this.books = await data['books'];
+        console.log(await data['books'])
       }
 
     },
@@ -87,7 +88,8 @@ export default {
       const response = await sendRequest('/user', 'GET', null);
       if (response.ok) {
         const data = await response.json();
-        this.users = data;
+        this.users = await data;
+        console.log(this.users)
       }
     }
   }

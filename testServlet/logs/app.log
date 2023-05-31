@@ -1,7 +1,0 @@
-2023-04-27 20:01:54,165 INFO [utils.TokenManager] - ErrorToken io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
-2023-04-27 20:01:56,496 INFO [utils.TokenManager] - ErrorToken io.jsonwebtoken.MalformedJwtException: JWT strings must contain exactly 2 period characters. Found: 0
-2023-04-27 20:07:26,564 INFO [servlet.UserServlet] - Success registration
-2023-04-27 20:10:52,226 INFO [utils.TokenManager] - ErrorToken io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-27T17:08:52Z. Current time: 2023-04-27T17:10:52Z, a difference of 120224 milliseconds.  Allowed clock skew: 0 milliseconds.
-2023-04-27 20:10:52,226 INFO [utils.TokenManager] - ErrorToken io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-27T17:08:52Z. Current time: 2023-04-27T17:10:52Z, a difference of 120224 milliseconds.  Allowed clock skew: 0 milliseconds.
-2023-04-27 20:12:17,019 INFO [utils.TokenManager] - ErrorToken io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-27T17:11:52Z. Current time: 2023-04-27T17:12:17Z, a difference of 25019 milliseconds.  Allowed clock skew: 0 milliseconds.
-2023-04-27 20:12:17,019 INFO [utils.TokenManager] - ErrorToken io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-04-27T17:11:52Z. Current time: 2023-04-27T17:12:17Z, a difference of 25019 milliseconds.  Allowed clock skew: 0 milliseconds.

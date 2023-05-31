@@ -13,6 +13,7 @@ export default {
     if (this.$auth0.isAuthenticated) {
       try {
         const token = await this.$auth0.getAccessTokenSilently();
+        console.log(token);
         const response = await sendRequest("/login/auth0", "POST", {"token": token})
         if (response.ok) {
           const data = await response.json();

@@ -111,12 +111,11 @@ export default {
       try {
         const response = await sendRequest('/book/' + this.$route.params.id, "GET", null)
         if (response.ok) {
-          console.log(response)
           const data = await response.json();
-          this.book = data;
+          this.book = data['book'];
           this.editedBook = Object.assign({}, data);
-          delete this.editedBook.count;
-          this.isHaveBook = this.book.quantity > this.book.count;
+          // delete this.editedBook.count;
+          this.isHaveBook = this.book.quantity > data['count'];
         } else {
 
           const error = await response.text();

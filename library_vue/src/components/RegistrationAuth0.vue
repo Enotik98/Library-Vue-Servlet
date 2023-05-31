@@ -67,7 +67,7 @@ export default {
       try {
         const response = await sendRequest('/user', 'POST', this.user)
         if (response.ok) {
-          window.location.href = `https://dev-3jh7bscjgsdbuvxn.us.auth0.com/continue?state=${this.$route.query.state}`
+          window.location.href = `https://dev-sx5kw23vuznwkzbt.us.auth0.com/continue?state=${this.$route.query.state}`
         }
       } catch (e) {
         console.log(e)

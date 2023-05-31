@@ -124,7 +124,7 @@ export default {
       const response = await sendRequest('/book/' + this.order.book_id, 'GET', null);
       if (response.ok) {
         const data = await response.json()
-        this.book = data;
+        this.book = data['book'];
       }
     },
     async updateOrder() {

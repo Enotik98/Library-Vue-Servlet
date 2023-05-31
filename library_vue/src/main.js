@@ -84,8 +84,8 @@ app.use(router)
 app.use(store);
 app.use(
     createAuth0({
-        domain: "dev-3jh7bscjgsdbuvxn.us.auth0.com",
-        clientId: "jlob9DKeeus1Bw0Z6BTTkcYdFUCm8JDM",
+        domain: "dev-sx5kw23vuznwkzbt.us.auth0.com",
+        clientId: "HRd9v3JZfa3K3uQbiburrp5mJkjQlWHr",
         // clientId: "bYU6GyFjlhuNHkhol97Z9BA1E2ZMQ5Jl",
         authorizationParams: {
             audience: "http://localhost:8081",

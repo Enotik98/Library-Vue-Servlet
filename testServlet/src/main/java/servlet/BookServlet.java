@@ -37,7 +37,8 @@ public class BookServlet extends HttpServlet {
                 return;
             }
             int count = BookService.countTakenBook(id);
-            jsonObject = new JSONObject(JsonUtils.getJsonString(book));
+//            jsonObject = new JSONObject();
+            jsonObject.put("book", new JSONObject(JsonUtils.getJsonString(book)));
             jsonObject.put("count", count);
         }
         out.println(jsonObject.toString());
